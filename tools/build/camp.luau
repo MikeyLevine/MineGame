@@ -223,4 +223,48 @@ do
 	prompt.Parent = promptPart
 end
 
+-- Leaderboard board (deepest Abyss divers / most prestiges), filled in by
+-- LeaderboardService, with the group-reward plaque under it. Mirrors the
+-- prestige obelisk on the other side of camp and faces the camp centre.
+do
+	local model = folder("Leaderboard", camp, "Model")
+	local base = Vector3.new(48, 0, 8)
+	local floor = floorBelow(base + Vector3.new(0, 20, 0), 40) or base
+	local face = CFrame.lookAt(floor + Vector3.new(0, 9, 0), floor + Vector3.new(-10, 9, 0))
+	for _, x in { -8.8, 8.8 } do
+		P({ Name = "Post", Size = Vector3.new(0.9, 17, 0.9), CFrame = face * CFrame.new(x, -2, 0.4),
+			Material = Enum.Material.Wood, Color = WOOD, Parent = model })
+	end
+	P({ Name = "Frame", Size = Vector3.new(17.8, 10.8, 0.5), CFrame = face * CFrame.new(0, 0, 0.45),
+		Material = Enum.Material.WoodPlanks, Color = DARKWOOD, Parent = model })
+	P({ Name = "Roof", Size = Vector3.new(19.6, 0.6, 2.6), CFrame = face * CFrame.new(0, 6.6, 0),
+		Material = Enum.Material.WoodPlanks, Color = WOOD, Parent = model })
+	local screen = P({ Name = "Screen", Size = Vector3.new(16.6, 9.6, 0.2), CFrame = face * CFrame.new(0, 0, 0.12),
+		Material = Enum.Material.SmoothPlastic, Color = Color3.fromRGB(24, 21, 19), CanCollide = false, Parent = model })
+	local gui = Instance.new("SurfaceGui")
+	gui.Name = "Board"
+	gui.Face = Enum.NormalId.Front
+	gui.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+	gui.PixelsPerStud = 40
+	gui.LightInfluence = 0
+	gui.Brightness = 1.2
+	gui.Parent = screen
+	lantern(model, (face * CFrame.new(-7.6, 6.2, -0.9)).Position, 0.4)
+	lantern(model, (face * CFrame.new(7.6, 6.2, -0.9)).Position, 0.4)
+
+	local plaque = sign(model, face * CFrame.new(0, -6.6, 0.1), Vector3.new(8, 1.6, 0.25), "GROUP REWARD", Color3.fromRGB(255, 208, 92))
+	plaque.Name = "GroupPlaque"
+	local promptPart = invisible("GroupPromptPart", face * CFrame.new(0, -6.6, -1.5), Vector3.new(1, 1, 1), model)
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.Name = "GroupPrompt"
+	prompt.ActionText = "Claim Group Reward"
+	prompt.ObjectText = "Join our Roblox group"
+	prompt.KeyboardKeyCode = Enum.KeyCode.E
+	prompt.GamepadKeyCode = Enum.KeyCode.ButtonX
+	prompt.HoldDuration = 0
+	prompt.MaxActivationDistance = 10
+	prompt.RequiresLineOfSight = false
+	prompt.Parent = promptPart
+end
+
 return table.concat(buildReport, " | ")

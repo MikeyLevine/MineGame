@@ -174,6 +174,20 @@ tools/
   judged by the server clock. Cash scales with mines completed (or prestige). Days 3, 5 and 7 add a
   short free boost. The calendar opens on join when a reward is waiting.
 
+## Leaderboard, badges and group reward
+
+- **Camp leaderboard** (`LeaderboardService`): global top 10 for the deepest Abyss floor and the
+  most prestiges, kept in OrderedDataStores. Scores are written when a player improves (at most
+  once a minute, and on leave), and the board re-reads every 2 minutes. Studio uses `_Studio`
+  stores so test scores never reach the live board.
+- **Badges** (`Config/Badges.luau`, `BadgeAwardService`): 10 Roblox badges tied to achievements
+  (plus Welcome). Create them on the Creator Dashboard (Engagement → Badges) and paste the ids;
+  badges with id 0 are skipped. Awarded badges are remembered in `data.Badges`.
+- **Group reward** (`GroupRewardService`): a one-time $25k plus 15 minutes of Lucky Charm for group
+  members, claimed at the plaque under the board. Set `GroupId` in `Config/GameConfig.luau`. Until
+  then the plaque says "coming soon". Membership is checked live, so players don't need to rejoin
+  after joining the group.
+
 ## Controls
 
 | Action | Keyboard | Gamepad |

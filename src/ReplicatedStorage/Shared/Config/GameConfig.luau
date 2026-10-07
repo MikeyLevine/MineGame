@@ -14,4 +14,10 @@ return {
 	CooldownTolerance = 0.8,
 
 	StartingCash = 0,
+
+	-- Roblox group for the one-time group reward (0 = not set up yet; the
+	-- camp plaque then says "coming soon").
+	GroupId = 0,
+	GroupRewardCash = 25000,
+	GroupRewardBoostSeconds = 900,
 }

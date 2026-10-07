@@ -38,6 +38,8 @@ export type Data = {
 	RunMined: { [string]: number }, -- ore mined since the last prestige (mine requirements)
 	Abyss: { Best: number }, -- deepest Endless Abyss floor reached (kept through prestige)
 	Daily: { Streak: number, LastDay: number, Best: number }, -- daily rewards (LastDay = UTC day number)
+	Badges: { [string]: boolean }, -- Roblox badges already awarded (Config/Badges ids)
+	GroupRewardClaimed: boolean,
 	Stats: {
 		TotalMined: number,
 		TotalEarned: number,
@@ -89,6 +91,8 @@ local function template(): Data
 		RunMined = {},
 		Abyss = { Best = 0 },
 		Daily = { Streak = 0, LastDay = -1, Best = 0 },
+		Badges = {},
+		GroupRewardClaimed = false,
 	}
 end
 
