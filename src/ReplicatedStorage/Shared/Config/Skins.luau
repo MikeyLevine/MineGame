@@ -60,13 +60,13 @@ Skins.List = {
 		Glow = true, Spark = Color3.fromRGB(255, 120, 50) },
 
 	-- Robux (the best ones: glow + trail + coloured sparks)
-	{ Id = "VoidReaper", Name = "Void Reaper", Source = "Robux", ProductId = 0,
+	{ Id = "VoidReaper", Name = "Void Reaper", Source = "Robux", ProductId = 3717115600,
 		HeadColor = Color3.fromRGB(140, 60, 255), HeadMaterial = Enum.Material.Neon, HandleColor = Color3.fromRGB(20, 10, 30),
 		Glow = true, Trail = Color3.fromRGB(160, 80, 255), Spark = Color3.fromRGB(190, 120, 255) },
-	{ Id = "Aurora", Name = "Aurora", Source = "Robux", ProductId = 0,
+	{ Id = "Aurora", Name = "Aurora", Source = "Robux", ProductId = 3717115637,
 		HeadColor = Color3.fromRGB(90, 255, 200), HeadMaterial = Enum.Material.Neon, HandleColor = Color3.fromRGB(30, 50, 70),
 		Glow = true, Trail = Color3.fromRGB(120, 200, 255), Spark = Color3.fromRGB(140, 255, 220) },
-	{ Id = "MoltenCore", Name = "Molten Core", Source = "Robux", ProductId = 0,
+	{ Id = "MoltenCore", Name = "Molten Core", Source = "Robux", ProductId = 3717115677,
 		HeadColor = Color3.fromRGB(255, 120, 30), HeadMaterial = Enum.Material.Neon, HandleColor = Color3.fromRGB(60, 20, 10),
 		Glow = true, Trail = Color3.fromRGB(255, 90, 20), Spark = Color3.fromRGB(255, 180, 60) },
 	{ Id = "GoldenRoyal", Name = "Golden Royal", Source = "Pass", Requires = "VIP",
