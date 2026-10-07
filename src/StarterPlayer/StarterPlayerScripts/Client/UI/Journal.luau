@@ -17,6 +17,7 @@ local Completion = require(Shared.Completion)
 local Format = require(Shared.Util.Format)
 local Mines = require(Shared.Config.Mines)
 local Modifiers = require(Shared.Modifiers)
+local Abyss = require(Shared.Config.Abyss)
 local Resources = require(Shared.Config.Resources)
 
 local Theme = require(script.Parent.Theme)
@@ -95,6 +96,16 @@ local function renderMines(state: any)
 			TextSize = 15, FontFace = Theme.FontMedium, TextColor3 = Theme.Colors.TextDim,
 			Position = UDim2.fromOffset(0, 26), Size = UDim2.new(1, 0, 0, 18),
 		}).Parent = f
+	end
+	local best = state.Abyss and state.Abyss.Best or 0
+	if best > 0 then
+		local f = row(0, 54)
+		Theme.Label({ Text = "THE ENDLESS ABYSS", TextSize = 20, FontFace = Theme.FontHeavy, TextColor3 = Color3.fromRGB(255, 90, 140),
+			Size = UDim2.new(1, -120, 0, 24) }).Parent = f
+		Theme.Label({ Text = `Best: floor {best}`, TextSize = 18, FontFace = Theme.FontHeavy, AnchorPoint = Vector2.new(1, 0),
+			Position = UDim2.fromScale(1, 0), Size = UDim2.fromOffset(160, 24), TextXAlignment = Enum.TextXAlignment.Right }).Parent = f
+		Theme.Label({ Text = `Deepest band reached: {Abyss.BandFor(best).Name}`, TextSize = 15, FontFace = Theme.FontMedium,
+			TextColor3 = Theme.Colors.TextDim, Position = UDim2.fromOffset(0, 26), Size = UDim2.new(1, 0, 0, 18) }).Parent = f
 	end
 	for i, mineId in Completion.OrderedMines() do
 		local mine = Mines.ById[mineId]

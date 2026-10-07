@@ -33,6 +33,8 @@ local function push(player: Player, data: DataService.Data)
 		EquippedSkin = data.EquippedSkin,
 		Stats = data.Stats,
 		RunMined = data.RunMined,
+		Abyss = data.Abyss,
+		Daily = data.Daily,
 		Saving = DataService:CanSave(player),
 	})
 end

@@ -16,6 +16,8 @@ local ORDER = {
 	"HazardService",
 	"ProgressService",
 	"TravelService",
+	"AbyssService",
+	"DailyService",
 	"AscensionService",
 	"ArtifactService",
 	"MechanismService",

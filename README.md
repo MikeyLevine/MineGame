@@ -9,7 +9,7 @@ game ends at the Last Seal with the Heart of the Deep. Phase 6 (replayability) i
 swing, ore chunks that fly to the player, camera shake, creature legs and outlines, cave motes, onboarding
 hints, a Settings menu and a performance pass. Phase 8 is done: prestige ("Collapse the Mines") as the endgame
 loop, plus optional monetization (game passes, timed boosts and pickaxe skins). Next: the Endless Abyss
-(procedural Mine 6), as a later update.
+(procedural Mine 6) and daily rewards are now in too.
 
 ## Workflow
 
@@ -154,6 +154,26 @@ tools/
   read from the dashboard, so set them there. Once real ids exist, Studio test purchases don't charge
   Robux.
 
+## Endless Abyss and daily rewards
+
+- **Endless Abyss** (`Config/Abyss.luau`, `AbyssService`). It unlocks after completing Mine 5 (or any
+  prestige) and you reach it from the camp lift. Each player gets private, generated floors in a
+  slot far below the map (x≥6000, y≈-2600). Each slot has two levels, so the next floor is built
+  before the old one is removed. A floor is a random walk of 4–8 terrain chambers joined by
+  tunnels, lit by crystals, with one-off ore owned by that player. Mining 60% of it opens the
+  Descent Shaft in the last chamber.
+  - Bands set the ore and look, and gate progress by gear: Heat Suit from floor 11, Magma Suit from 16,
+    Void Suit and creatures from 21, Abyss Suit from 31, repeating forever.
+  - Rock health, units per break and creature health grow with depth.
+  - `data.Abyss.Best` is the record. Every new record pays a bonus, and runs start at the last
+    checkpoint (every 5 floors).
+  - Leaving: the Exit Rope by the start, or dying (both remove the floor).
+  - Run state reaches the HUD through player attributes (`AbyssFloor`, `AbyssMined`, `AbyssQuota`,
+    `AbyssOpen`).
+- **Daily rewards** (`Config/Daily.luau`, `DailyService`) use a 7-day looping streak by UTC day,
+  judged by the server clock. Cash scales with mines completed (or prestige). Days 3, 5 and 7 add a
+  short free boost. The calendar opens on join when a reward is waiting.
+
 ## Controls
 
 | Action | Keyboard | Gamepad |
@@ -162,6 +182,7 @@ tools/
 | Store | B | D-pad up |
 | Settings | (gear button) | D-pad down |
 | Remote Sell (pass) | G | D-pad left |
+| Daily rewards | (DAILY button) | D-pad right |
 | Close any window | Esc | B |
 
 ## Hardening
@@ -179,6 +200,7 @@ tools/
 From the server command bar during a playtest (Studio only):
 `ServerStorage.DeepMineDebug:Invoke(cmd, ...)` with `Get`, `SetCash n`, `Reset`, `SetMined "Iron" n`,
 `SetTier p b`, `SetEquip "LampTier" n`, `SetGate "Id" true`, `SetStat "CreaturesDefeated" n`, `Event "Meteorite"|"RichSeam"|"OreFrenzy"|"LuckyHour"`, `OpenGates`, `SetMineDone "Mine5" true`, `SetPrestige n`,
+`SetAbyssBest n`, `AbyssOpen` (opens the current shaft), `SetDaily streak daysAgo`,
 `GrantPass "VIP" [false]`, `GrantProduct "MiningFrenzy"|"VoidReaper" ["receiptId"]` (same grant path as a real
 receipt; reuse a receipt id to check it isn't granted twice), `Snapshot` / `Restore`. Use `Snapshot` and `Restore` before destructive
 tests on a real save.

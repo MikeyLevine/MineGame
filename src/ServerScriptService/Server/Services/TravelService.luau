@@ -17,6 +17,8 @@ local DataService = require(script.Parent.DataService)
 local RateLimit = require(script.Parent.Parent.Util.RateLimit)
 
 local TravelService = {}
+-- Set by AbyssService (avoids a require cycle): starts an Abyss run.
+TravelService.EnterAbyss = nil :: ((Player) -> (boolean, string))?
 local liftLimit = RateLimit.new(0.5)
 
 export type Intro = { title: string?, subtitle: string?, tagline: string? }
@@ -89,6 +91,12 @@ local function useLift(player: Player, liftId: any): (boolean, string)
 	end
 	if not Progress.IsLiftUnlocked(data :: any, lift) then
 		return false, "You haven't reached that level yet"
+	end
+	if lift.Abyss then
+		if not TravelService.EnterAbyss then
+			return false, "The Abyss is closed right now"
+		end
+		return TravelService.EnterAbyss(player)
 	end
 	local target = TravelService:ArrivalFor(lift.Id)
 	if not target then

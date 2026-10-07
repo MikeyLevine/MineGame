@@ -20,6 +20,7 @@ local ORDER: { ModuleScript } = {
 	UI.Hud,
 	UI.Shop,
 	UI.Objectives,
+	UI.AbyssHud,
 	UI.LiftMenu,
 	Controllers.TravelController,
 	Controllers.GateController,
@@ -37,6 +38,7 @@ local ORDER: { ModuleScript } = {
 	Controllers.EventController,
 	UI.Settings,
 	UI.Store,
+	UI.Daily,
 	UI.Hints,
 }
 

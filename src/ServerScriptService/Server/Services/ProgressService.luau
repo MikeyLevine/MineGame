@@ -7,6 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local ZoneLocator = require(Shared.Util.ZoneLocator)
+local Mines = require(Shared.Config.Mines)
 
 local DataService = require(script.Parent.DataService)
 
@@ -22,8 +23,8 @@ local function check(player: Player)
 		return
 	end
 	local mineId, zoneId = ZoneLocator.Locate(root.Position)
-	if not mineId or not zoneId then
-		return
+	if not mineId or not zoneId or not Mines.ById[mineId] then
+		return -- not in a mine (or in the Abyss, which tracks its own progress)
 	end
 	local state = data.Mines[mineId]
 	if state and state.Visited and state.Reached and state.Reached[zoneId] then

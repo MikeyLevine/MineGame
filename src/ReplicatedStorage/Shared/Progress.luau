@@ -4,6 +4,7 @@
 
 local Mines = require(script.Parent.Config.Mines)
 local Artifacts = require(script.Parent.Config.Artifacts)
+local Abyss = require(script.Parent.Config.Abyss)
 
 export type Item = {
 	Id: string,
@@ -117,6 +118,9 @@ function Progress.FrontierMine(data: DataLike): string?
 end
 
 function Progress.IsLiftUnlocked(data: DataLike, lift: Mines.Lift): boolean
+	if lift.Abyss then
+		return Abyss.IsUnlocked(data)
+	end
 	if lift.UnlockGate and data.Gates[lift.UnlockGate] then
 		return true
 	end

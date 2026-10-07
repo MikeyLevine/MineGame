@@ -75,6 +75,7 @@ export type Lift = {
 	Description: string,
 	UnlockGate: string?,
 	UnlockMine: string?,
+	Abyss: boolean?, -- the Endless Abyss (AbyssService builds the floor; see Config/Abyss)
 }
 
 local Mines = {}
@@ -633,6 +634,13 @@ Mines.Lifts = {
 		DisplayName = "Spore Forest",
 		Description = "Mine 5, forest level (bring a Void Suit!)",
 		UnlockGate = "Membrane",
+	},
+	{
+		Id = "Abyss",
+		MineId = "Abyss",
+		DisplayName = "The Endless Abyss",
+		Description = "Generated floors that never end",
+		Abyss = true,
 	},
 } :: { Lift }
 

@@ -118,6 +118,26 @@ local COMMANDS: { [string]: (Player, ...any) -> any } = {
 		end)
 		return "ok"
 	end,
+	-- SetDaily(streak, daysAgo): pretend the last claim was `daysAgo` days ago
+	-- (1 = yesterday, so today continues the streak; 2+ breaks it).
+	SetDaily = function(player, streak, daysAgo)
+		DataService:Update(player, function(d)
+			d.Daily.Streak = tonumber(streak) or 0
+			d.Daily.LastDay = os.time() // 86400 - (tonumber(daysAgo) or 1)
+		end)
+		return "ok"
+	end,
+	SetAbyssBest = function(player, floor)
+		DataService:Update(player, function(d)
+			d.Abyss.Best = tonumber(floor) or 0
+		end)
+		return "ok"
+	end,
+	-- AbyssOpen(): open the current floor's shaft without mining (testing).
+	AbyssOpen = function(player)
+		local run = require(script.Parent.AbyssService)
+		return tostring(run:DebugOpen(player))
+	end,
 	SetPrestige = function(player, level)
 		DataService:Update(player, function(d)
 			d.Prestige = tonumber(level) or 0

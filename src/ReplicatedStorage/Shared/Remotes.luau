@@ -19,6 +19,7 @@ local EVENTS = {
 	"OpenLift", -- S->C () show the lift destination picker
 	"ObjectivesPulse", -- S->C () draw attention to the objectives panel
 	"OpenPrestige", -- S->C () show the prestige dialog
+	"OpenDaily", -- S->C () a daily reward is waiting
 	"ArtifactFound", -- S->C (artifactId) show the discovery card
 	"Creature", -- S->C ({ event = "alert" | "bite" | "death", position }) creature sounds/effects
 	"Ending", -- S->C () the player completed the final mine
@@ -34,6 +35,7 @@ local FUNCTIONS = {
 	"EquipSkin", -- C->S (skinId) -> (ok, message)
 	"RemoteSell", -- C->S () -> (ok, message) Remote Seller pass
 	"Prestige", -- C->S () -> (ok, message)
+	"ClaimDaily", -- C->S () -> (ok, message)
 }
 
 local Remotes = {}

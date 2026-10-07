@@ -32,6 +32,7 @@ type State = {
 	Spawn: BasePart,
 	Home: Vector3,
 	Health: number,
+	MaxHealth: number,
 	Target: Player?,
 	LastBite: number,
 	WanderTo: Vector3?,
@@ -143,11 +144,13 @@ local function spawnCreature(spawnPart: BasePart, container: Instance)
 	end
 	local home = spawnPart.Position
 	local floor = groundBelow(home) or home
+	-- Spawn points can scale health (deeper abyss floors).
+	local maxHealth = math.floor(config.Health * ((spawnPart:GetAttribute("HealthMult") :: number?) or 1))
 	local at = CFrame.new(floor + Vector3.new(0, 2 * config.Scale, 0)) * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
 	local model = buildModel(config, at)
 	model:SetAttribute("Kind", kind)
-	model:SetAttribute("Health", config.Health)
-	model:SetAttribute("MaxHealth", config.Health)
+	model:SetAttribute("Health", maxHealth)
+	model:SetAttribute("MaxHealth", maxHealth)
 	CollectionService:AddTag(model, "Creature")
 	model.Parent = container
 	states[model] = {
@@ -156,7 +159,8 @@ local function spawnCreature(spawnPart: BasePart, container: Instance)
 		Config = config,
 		Spawn = spawnPart,
 		Home = floor,
-		Health = config.Health,
+		Health = maxHealth,
+		MaxHealth = maxHealth,
 		Target = nil,
 		LastBite = 0,
 		WanderTo = nil,
@@ -221,6 +225,10 @@ local function step(s: State, goal: Vector3, speed: number): Vector3
 end
 
 local function update(s: State)
+	if not s.Model.Parent then
+		states[s.Model] = nil -- its abyss floor was removed
+		return
+	end
 	local config = s.Config
 	local position = s.Model:GetPivot().Position
 	local now = os.clock()
@@ -259,8 +267,8 @@ local function update(s: State)
 
 	-- Idle: heal, wander near home, forget who we fought.
 	table.clear(s.Engaged)
-	if s.Health < config.Health then
-		s.Health = math.min(config.Health, s.Health + config.Health * 0.05 * TICK)
+	if s.Health < s.MaxHealth then
+		s.Health = math.min(s.MaxHealth, s.Health + s.MaxHealth * 0.05 * TICK)
 		s.Model:SetAttribute("Health", math.floor(s.Health))
 	end
 	if (position - s.Home).Magnitude > 24 then
@@ -319,12 +327,18 @@ function CreatureService:Damage(player: Player, model: Instance, amount: number)
 	local position = s.Model:GetPivot().Position
 	if s.Health <= 0 then
 		feedback:FireClient(player, { target = model, kind = "Creature", broken = true, position = position,
-			health = 0, maxHealth = s.Config.Health, name = s.Config.Name })
+			health = 0, maxHealth = s.MaxHealth, name = s.Config.Name })
 		kill(s, player)
 	else
 		feedback:FireClient(player, { target = model, kind = "Creature", broken = false, position = position,
-			health = s.Health, maxHealth = s.Config.Health, name = s.Config.Name })
+			health = s.Health, maxHealth = s.MaxHealth, name = s.Config.Name })
 	end
+end
+
+-- Spawns a creature at a part with a "Kind" attribute (optional "HealthMult").
+-- Used by AbyssService for generated floors; it respawns while the part exists.
+function CreatureService:SpawnAt(spawnPart: BasePart, container: Instance)
+	spawnCreature(spawnPart, container)
 end
 
 function CreatureService:Init()

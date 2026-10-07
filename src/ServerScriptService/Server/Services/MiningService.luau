@@ -13,6 +13,7 @@ local GameConfig = require(Shared.Config.GameConfig)
 local Mines = require(Shared.Config.Mines)
 local Resources = require(Shared.Config.Resources)
 local Remotes = require(Shared.Remotes)
+local Signal = require(Shared.Util.Signal)
 local Targets = require(Shared.Util.Targets)
 
 local DataService = require(script.Parent.DataService)
@@ -24,6 +25,8 @@ local Modifiers = require(Shared.Modifiers)
 local rng = Random.new()
 
 local MiningService = {}
+-- (player, oreState, amount) after any ore is broken by a player.
+MiningService.OreBroken = Signal.new()
 
 local lastSwing: { [Player]: number } = {}
 local feedback: RemoteEvent
@@ -93,6 +96,9 @@ function MiningService:HitOre(player: Player, model: Instance, power: number, ha
 	if not data or not ore or not resource then
 		return false
 	end
+	if ore.Owner and ore.Owner ~= player then
+		return false -- someone else's abyss floor
+	end
 	local zone = Mines.GetZone(ore.MineId, ore.ZoneId)
 	if zone and not GateService:IsOpen(player, zone.RequiredGate) then
 		return false -- can't legitimately be here yet
@@ -140,12 +146,15 @@ function MiningService:HitOre(player: Player, model: Instance, power: number, ha
 		rich = luck > 1 and rng:NextNumber() < base * (luck - 1)
 	end
 	if broken then
-		amount = InventoryService:Add(player, resource.Id, if rich then OreService:Yield({ Rich = true } :: any) else 1)
+		amount = InventoryService:Add(player, resource.Id, OreService:Yield({ Rich = rich, Yield = ore.Yield } :: any))
 		if rich then
 			DataService:Update(player, function(d)
 				d.Stats.RichVeins = (d.Stats.RichVeins or 0) + 1
 			end)
 		end
+	end
+	if broken then
+		MiningService.OreBroken:Fire(player, ore, amount)
 	end
 	-- Splash hits that don't break anything aren't worth a network message.
 	if not silent or broken then

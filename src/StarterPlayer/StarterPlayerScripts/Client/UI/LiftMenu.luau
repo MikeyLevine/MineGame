@@ -10,6 +10,7 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
+local Abyss = require(Shared.Config.Abyss)
 local Mines = require(Shared.Config.Mines)
 local Progress = require(Shared.Progress)
 local Remotes = require(Shared.Remotes)
@@ -25,13 +26,16 @@ local CLOSE_DISTANCE = 18
 
 local gui: ScreenGui
 local window: Frame
-local listFrame: Frame
+local listFrame: ScrollingFrame
 local isOpen = false
 local busy = false
 local distanceConn: RBXScriptConnection?
 local firstButton: GuiObject?
 
 local function lockedHint(lift: Mines.Lift): string
+	if lift.Abyss then
+		return "Complete the Unknown Depths to unlock"
+	end
 	if lift.UnlockGate then
 		for _, mine in Mines.ById do
 			local gate = mine.Gates[lift.UnlockGate]
@@ -68,7 +72,7 @@ local function render()
 		rowFrame.LayoutOrder = i
 		rowFrame.BackgroundColor3 = Theme.Colors.PanelLight
 		rowFrame.BorderSizePixel = 0
-		rowFrame.Size = UDim2.new(1, 0, 0, 64)
+		rowFrame.Size = UDim2.new(1, -10, 0, 64)
 		Theme.Corner(rowFrame, 10)
 		Theme.Padding(rowFrame, 10)
 		rowFrame.Parent = listFrame
@@ -82,7 +86,9 @@ local function render()
 		})
 		name.Parent = rowFrame
 		local desc = Theme.Label({
-			Text = if unlocked then lift.Description else lockedHint(lift),
+			Text = if not unlocked then lockedHint(lift)
+				elseif lift.Abyss then `Starts at floor {Abyss.StartFloor(state.Abyss and state.Abyss.Best or 0)} · best {state.Abyss and state.Abyss.Best or 0}`
+				else lift.Description,
 			TextSize = 14,
 			FontFace = Theme.FontMedium,
 			TextColor3 = Theme.Colors.TextDim,
@@ -120,7 +126,8 @@ local function render()
 			end
 		end)
 	end
-	window.Size = UDim2.fromOffset(460, 92 + #Mines.Lifts * 72)
+	-- Cap the height (it must fit a 720p screen at UI scale 1.1); the list scrolls.
+	window.Size = UDim2.fromOffset(460, math.min(92 + #Mines.Lifts * 72, 560))
 end
 
 function LiftMenu:Close()
@@ -188,9 +195,14 @@ function LiftMenu:Init()
 		self:Close()
 	end)
 
-	listFrame = Instance.new("Frame")
+	listFrame = Instance.new("ScrollingFrame")
 	listFrame.Name = "List"
 	listFrame.BackgroundTransparency = 1
+	listFrame.BorderSizePixel = 0
+	listFrame.ScrollBarThickness = 6
+	listFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+	listFrame.CanvasSize = UDim2.new()
+	listFrame.ScrollingDirection = Enum.ScrollingDirection.Y
 	listFrame.Position = UDim2.fromOffset(0, 52)
 	listFrame.Size = UDim2.new(1, 0, 1, -52)
 	listFrame.Parent = window

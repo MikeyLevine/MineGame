@@ -20,7 +20,9 @@ type OreState = {
 	Health: number,
 	MaxHealth: number,
 	Rich: boolean,
-	Point: BasePart?, -- nil for special one-off ores (event meteorites)
+	Point: BasePart?, -- nil for special one-off ores (event meteorites, abyss)
+	Yield: number?, -- units per break before the rich bonus (abyss floors pay more)
+	Owner: Player?, -- only this player may mine it (abyss floors)
 }
 
 local OreService = {}
@@ -61,13 +63,13 @@ local function makePart(props: { [string]: any }): Part
 end
 
 -- Builds a chunky rock with ore pieces poking out of it.
-local function buildOreModel(resource: Resources.Resource, point: BasePart, rich: boolean, health: number): Model
+local function buildOreModel(resource: Resources.Resource, placement: CFrame, rich: boolean, health: number): Model
 	local model = Instance.new("Model")
 	model.Name = (if rich then "Rich_" else "Ore_") .. resource.Id
 
 	local scale = rng:NextNumber(0.9, 1.25) * (if rich then 1.2 else 1)
-	local up = point.CFrame.UpVector
-	local base = point.CFrame * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
+	local up = placement.UpVector
+	local base = placement * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
 	local center = base + up * (1.0 * scale)
 
 	local rock = makePart({
@@ -167,7 +169,7 @@ local function spawnOre(mineId: string, zone: Mines.Zone, point: BasePart, conta
 	local boost = (ReplicatedStorage:GetAttribute("RichMultiplier") :: number?) or 1
 	local rich = rng:NextNumber() < (zone.RichChance or 0) * boost
 	local health = math.ceil(resource.Health * (if rich then RICH_HEALTH_MULT else 1))
-	local model = buildOreModel(resource, point, rich, health)
+	local model = buildOreModel(resource, point.CFrame, rich, health)
 	model:SetAttribute("Zone", zone.Id)
 	ores[model] = {
 		ResourceId = resource.Id,
@@ -211,7 +213,43 @@ end
 local zoneRuntime: { [string]: { Zone: Mines.Zone, Points: { BasePart }, Container: Instance, MineId: string } } = {}
 
 function OreService:Yield(state: OreState): number
-	return if state.Rich then RICH_YIELD else 1
+	return (state.Yield or 1) * (if state.Rich then RICH_YIELD else 1)
+end
+
+export type AbyssOre = { Health: number, Yield: number, Rich: boolean, Owner: Player, Floor: number }
+
+-- Spawns a one-off ore on an abyss floor at `placement` (UpVector = surface
+-- normal). It never respawns and only `opts.Owner` can mine it.
+function OreService:SpawnAbyss(resourceId: string, placement: CFrame, container: Instance, opts: AbyssOre): Model?
+	local resource = Resources.Get(resourceId)
+	if not resource then
+		return nil
+	end
+	local health = math.ceil(opts.Health * (if opts.Rich then RICH_HEALTH_MULT else 1))
+	local model = buildOreModel(resource, placement, opts.Rich, health)
+	model:SetAttribute("Zone", "Abyss")
+	ores[model] = {
+		ResourceId = resource.Id,
+		MineId = "Abyss",
+		ZoneId = "F" .. opts.Floor,
+		Health = health,
+		MaxHealth = health,
+		Rich = opts.Rich,
+		Point = nil,
+		Yield = opts.Yield,
+		Owner = opts.Owner,
+	}
+	model.Parent = container
+	return model
+end
+
+-- Forgets ores whose models were destroyed with their floor.
+function OreService:Forget(container: Instance)
+	for model in ores do
+		if model:IsDescendantOf(container) or not model.Parent then
+			ores[model] = nil
+		end
+	end
 end
 
 -- Live ore models whose pivot is within `radius` of `position`.
@@ -233,7 +271,7 @@ function OreService:SpawnSpecial(resourceId: string, point: BasePart, container:
 		return nil
 	end
 	local health = math.ceil(resource.Health * (if rich then RICH_HEALTH_MULT else 1))
-	local model = buildOreModel(resource, point, rich, health)
+	local model = buildOreModel(resource, point.CFrame, rich, health)
 	model:SetAttribute("Zone", "Event")
 	ores[model] = {
 		ResourceId = resource.Id,
@@ -264,7 +302,7 @@ function OreService:MakeRich(mineId: string, zoneId: string, count: number): num
 		local resource = Resources.Get(state.ResourceId)
 		if resource and state.Point then
 			local health = math.ceil(resource.Health * RICH_HEALTH_MULT)
-			local replacement = buildOreModel(resource, state.Point, true, health)
+			local replacement = buildOreModel(resource, state.Point.CFrame, true, health)
 			replacement:SetAttribute("Zone", state.ZoneId)
 			ores[replacement] = {
 				ResourceId = state.ResourceId,

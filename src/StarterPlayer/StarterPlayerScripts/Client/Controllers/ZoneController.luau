@@ -10,6 +10,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
+local Abyss = require(Shared.Config.Abyss)
 local Mines = require(Shared.Config.Mines)
 local ZoneLocator = require(Shared.Util.ZoneLocator)
 
@@ -40,9 +41,26 @@ local SURFACE = {
 -- Underground the sky can't reach you. Sun/sky are zeroed rather than relying
 -- on shadows: on low graphics quality (and many phones) shadows are off and
 -- the sun would light the caves. Lanterns, crystals and the headlamp do the work.
-local function cavePreset(mineId: string)
-	local mine = Mines.ById[mineId]
-	local lighting = mine and mine.Lighting
+-- Lighting for a mine, or for an Abyss floor's band (zone id "F<floor>").
+local function lightingFor(mineId: string?, zoneId: string?): Mines.MineLighting?
+	if mineId == "Abyss" then
+		local band = Abyss.BandFor(tonumber(zoneId and string.sub(zoneId, 2)) or 1)
+		return { Ambient = band.Ambient, AtmosphereColor = band.AtmosphereColor, AtmosphereDecay = band.AtmosphereDecay }
+	end
+	local mine = mineId and Mines.ById[mineId]
+	return mine and mine.Lighting
+end
+
+local function ambienceFor(mineId: string?, zoneId: string?): string
+	if mineId == "Abyss" then
+		return Abyss.BandFor(tonumber(zoneId and string.sub(zoneId, 2)) or 1).Ambience or "CaveAmbience"
+	end
+	local mine = mineId and Mines.ById[mineId]
+	return if mine then mine.Ambience or "CaveAmbience" else "SurfaceAmbience"
+end
+
+local function cavePreset(mineId: string, zoneId: string?)
+	local lighting = lightingFor(mineId, zoneId)
 	return {
 		Lighting = {
 			Brightness = 0,
@@ -119,11 +137,11 @@ local function buildMotes()
 	end)
 end
 
-local function setMotes(mineId: string?)
-	local mine = mineId and Mines.ById[mineId]
-	motesEmitter.Enabled = mine ~= nil
-	if mine then
-		motesEmitter.Color = ColorSequence.new(mine.Lighting.AtmosphereColor:Lerp(Color3.new(1, 1, 1), 0.6))
+local function setMotes(mineId: string?, zoneId: string?)
+	local lighting = lightingFor(mineId, zoneId)
+	motesEmitter.Enabled = lighting ~= nil
+	if lighting then
+		motesEmitter.Color = ColorSequence.new(lighting.AtmosphereColor:Lerp(Color3.new(1, 1, 1), 0.6))
 	end
 end
 
@@ -145,13 +163,13 @@ function ZoneController:Init()
 			self.Current = key
 			local zone = if mineId and zoneId then Mines.GetZone(mineId, zoneId) else nil
 			local dark = zone ~= nil and zone.Dark ~= nil
-			if mineId ~= self.CurrentMine or not key or dark ~= self.InDark then
+			-- Each Abyss floor is its own zone key, so its band look applies on arrival.
+			if mineId ~= self.CurrentMine or mineId == "Abyss" or not key or dark ~= self.InDark then
 				self.CurrentMine = mineId
 				self.InDark = dark
-				local mineConfig = mineId and Mines.ById[mineId]
-				SoundController:SetAmbience(if mineConfig then mineConfig.Ambience or "CaveAmbience" else "SurfaceAmbience")
-				applyPreset(if dark then DARK elseif mineId then cavePreset(mineId) else SURFACE)
-				setMotes(mineId)
+				SoundController:SetAmbience(ambienceFor(mineId, zoneId))
+				applyPreset(if dark then DARK elseif mineId then cavePreset(mineId, zoneId) else SURFACE)
+				setMotes(mineId, zoneId)
 			end
 			if dark and zone and zone.Dark then
 				local state = StateController.State

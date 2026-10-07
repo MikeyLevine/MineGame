@@ -36,6 +36,8 @@ export type Data = {
 	EquippedSkin: string,
 	Purchases: { [string]: boolean },
 	RunMined: { [string]: number }, -- ore mined since the last prestige (mine requirements)
+	Abyss: { Best: number }, -- deepest Endless Abyss floor reached (kept through prestige)
+	Daily: { Streak: number, LastDay: number, Best: number }, -- daily rewards (LastDay = UTC day number)
 	Stats: {
 		TotalMined: number,
 		TotalEarned: number,
@@ -85,6 +87,8 @@ local function template(): Data
 		EquippedSkin = "Classic",
 		Purchases = {}, -- processed Developer Product receipt ids (idempotency)
 		RunMined = {},
+		Abyss = { Best = 0 },
+		Daily = { Streak = 0, LastDay = -1, Best = 0 },
 	}
 end
 

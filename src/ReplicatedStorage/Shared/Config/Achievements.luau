@@ -35,6 +35,12 @@ local function completed(mineId: string)
 	end
 end
 
+local function abyss(target: number)
+	return function(data): (number, number)
+		return math.min(data.Abyss and data.Abyss.Best or 0, target), target
+	end
+end
+
 local function prestige(target: number)
 	return function(data): (number, number)
 		return math.min(data.Prestige or 0, target), target
@@ -119,6 +125,20 @@ Achievements.List = {
 	{ Id = "BestLamp", Name = "Light Bringer", Description = "Own the brightest lamp.", Reward = 20000, Category = "Gear", Progress = tier("LampTier", Equipment.Lamps) },
 	{ Id = "Drill", Name = "Power Tools", Description = "Buy a mining drill.", Reward = 20000, Category = "Gear", Progress = function(data)
 		return math.min(data.DrillTier or 0, 1), 1
+	end },
+
+	-- The Endless Abyss
+	{ Id = "Abyss5", Name = "Into the Abyss", Description = "Reach floor 5 of the Endless Abyss.", Reward = 50000, Category = "Abyss", Progress = abyss(5) },
+	{ Id = "Abyss10", Name = "Deep Diver", Description = "Reach floor 10 of the Endless Abyss.", Reward = 200000, Category = "Abyss", Progress = abyss(10) },
+	{ Id = "Abyss25", Name = "Abyss Walker", Description = "Reach floor 25 of the Endless Abyss.", Reward = 2000000, Category = "Abyss", Progress = abyss(25) },
+	{ Id = "Abyss50", Name = "Bottomless", Description = "Reach floor 50 of the Endless Abyss.", Reward = 10000000, Category = "Abyss", Progress = abyss(50) },
+
+	-- Daily streaks
+	{ Id = "Daily7", Name = "Creature of Habit", Description = "Claim daily rewards 7 days in a row.", Reward = 25000, Category = "Daily", Progress = function(data)
+		return math.min(data.Daily and data.Daily.Best or 0, 7), 7
+	end },
+	{ Id = "Daily30", Name = "Lifer", Description = "Claim daily rewards 30 days in a row.", Reward = 500000, Category = "Daily", Progress = function(data)
+		return math.min(data.Daily and data.Daily.Best or 0, 30), 30
 	end },
 
 	-- Prestige (rewards land right after the reset, as a head start)

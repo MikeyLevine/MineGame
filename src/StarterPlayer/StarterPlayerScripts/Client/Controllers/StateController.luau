@@ -27,6 +27,8 @@ export type State = {
 	Stats: { TotalMined: number, TotalEarned: number, Mined: { [string]: number }, CreaturesDefeated: number? },
 	Prestige: number,
 	RunMined: { [string]: number }?,
+	Abyss: { Best: number }?,
+	Daily: { Streak: number, LastDay: number, Best: number }?,
 	Boosts: { [string]: number }, -- boost id -> Unix time it ends
 	Skins: { [string]: boolean },
 	EquippedSkin: string,
