@@ -208,7 +208,14 @@ local function saveProfile(player: Player, profile: Profile, release: boolean): 
 		end)
 		if ok then
 			if lostLock then
+				-- Another server took the session over (e.g. this one stalled past the
+				-- stale-lock timeout). Anything played here can't be saved any more,
+				-- so stop the player rather than let them lose progress silently.
 				warn(`[DataService] Not saving {player.Name}: another server owns the session`)
+				profile.CanSave = false
+				if player.Parent then
+					player:Kick("Your save was opened on another server. Please rejoin.")
+				end
 			end
 			saved = not lostLock
 			break

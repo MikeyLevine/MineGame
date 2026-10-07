@@ -4,9 +4,11 @@
 -- MarketplaceService prompts; the server grants them in ProcessReceipt.
 -- Cash skins and equipping go through validated server remotes.
 
+local GuiService = game:GetService("GuiService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Format = require(Shared.Util.Format)
@@ -304,10 +306,24 @@ function Store:Select(tab: string)
 	end
 end
 
+function Store:Open()
+	gui.Enabled = true
+	refresh()
+	if UserInputService.GamepadEnabled then
+		GuiService.SelectedObject = tabButtons.Passes
+	end
+end
+
+function Store:Close()
+	gui.Enabled = false
+	GuiService.SelectedObject = nil
+end
+
 function Store:Toggle()
-	gui.Enabled = not gui.Enabled
 	if gui.Enabled then
-		refresh()
+		Store:Close()
+	else
+		Store:Open()
 	end
 end
 
@@ -326,7 +342,7 @@ function Store:Init()
 		TextColor3 = Theme.Colors.Text, AnchorPoint = Vector2.new(1, 0), Position = UDim2.fromScale(1, 0), Size = UDim2.fromOffset(40, 40) })
 	close.Parent = window
 	close.Activated:Connect(function()
-		gui.Enabled = false
+		Store:Close()
 	end)
 
 	local tabBar = Instance.new("Frame")
@@ -357,8 +373,8 @@ function Store:Init()
 	gui.Parent = player:WaitForChild("PlayerGui")
 
 	local hud = player.PlayerGui:WaitForChild("Hud")
-	local open = Theme.Button({ Name = "StoreButton", Text = "STORE", TextSize = 15, BackgroundColor3 = Theme.Colors.Panel,
-		TextColor3 = Theme.Colors.Cash, Position = UDim2.fromOffset(216, 122), Size = UDim2.fromOffset(74, 34) })
+	local open = Theme.Button({ Name = "StoreButton", Text = "STORE  (B)", TextSize = 15, BackgroundColor3 = Theme.Colors.Panel,
+		TextColor3 = Theme.Colors.Cash, Position = UDim2.fromOffset(216, 122), Size = UDim2.fromOffset(104, 34) })
 	Theme.Stroke(open, Theme.Colors.Cash, 1.5, 0.3)
 	open.Parent = hud
 	open.Activated:Connect(function()
@@ -368,6 +384,14 @@ function Store:Init()
 	StateController:Observe(function()
 		if gui.Enabled then
 			refresh()
+		end
+	end)
+	-- Keyboard B / gamepad D-pad up toggles; gamepad B or Escape closes.
+	UserInputService.InputBegan:Connect(function(input, processed)
+		if gui.Enabled and (input.KeyCode == Enum.KeyCode.ButtonB or (not processed and input.KeyCode == Enum.KeyCode.Escape)) then
+			Store:Close()
+		elseif not processed and (input.KeyCode == Enum.KeyCode.B or input.KeyCode == Enum.KeyCode.DPadUp) then
+			Store:Toggle()
 		end
 	end)
 	player.AttributeChanged:Connect(function(name)

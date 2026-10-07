@@ -4,8 +4,10 @@
 -- exactly what is kept, what is lost and what is gained before the player
 -- commits; the server re-checks eligibility.
 
+local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local UserInputService = game:GetService("UserInputService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Mines = require(Shared.Config.Mines)
@@ -23,6 +25,7 @@ local gui: ScreenGui
 local title: TextLabel
 local gainLabel: TextLabel
 local confirm: TextButton
+local closeButton: TextButton
 local busy = false
 
 local function endingMine(): string?
@@ -75,10 +78,15 @@ end
 function PrestigeDialog:Open()
 	refresh()
 	gui.Enabled = true
+	if UserInputService.GamepadEnabled then
+		-- Start on Close so a stray A press can't wipe a run.
+		GuiService.SelectedObject = closeButton
+	end
 end
 
 function PrestigeDialog:Close()
 	gui.Enabled = false
+	GuiService.SelectedObject = nil
 end
 
 function PrestigeDialog:Init()
@@ -98,6 +106,7 @@ function PrestigeDialog:Init()
 	local close = Theme.Button({ Name = "Close", Text = "X", TextSize = 20, BackgroundColor3 = Theme.Colors.PanelLight,
 		TextColor3 = Theme.Colors.Text, AnchorPoint = Vector2.new(1, 0), Position = UDim2.fromScale(1, 0), Size = UDim2.fromOffset(40, 40) })
 	close.Parent = window
+	closeButton = close
 	close.Activated:Connect(function()
 		PrestigeDialog:Close()
 	end)
@@ -132,6 +141,11 @@ function PrestigeDialog:Init()
 	end)
 
 	gui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+	UserInputService.InputBegan:Connect(function(input, processed)
+		if gui.Enabled and (input.KeyCode == Enum.KeyCode.ButtonB or (not processed and input.KeyCode == Enum.KeyCode.Escape)) then
+			PrestigeDialog:Close()
+		end
+	end)
 	Remotes.Event("OpenPrestige").OnClientEvent:Connect(function()
 		PrestigeDialog:Open()
 	end)

@@ -3,6 +3,7 @@
 -- and hints. Changes apply instantly and are saved to the server shortly
 -- after the player stops adjusting.
 
+local GuiService = game:GetService("GuiService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
@@ -163,8 +164,26 @@ local function toggle(order: number, label: string, key: string)
 	end)
 end
 
+function Settings:Open()
+	gui.Enabled = true
+	if UserInputService.GamepadEnabled then
+		local list = window:FindFirstChild("List")
+		local first = list and list:FindFirstChild("Sfx", true)
+		GuiService.SelectedObject = first :: GuiObject?
+	end
+end
+
+function Settings:Close()
+	gui.Enabled = false
+	GuiService.SelectedObject = nil
+end
+
 function Settings:Toggle()
-	gui.Enabled = not gui.Enabled
+	if gui.Enabled then
+		self:Close()
+	else
+		self:Open()
+	end
 end
 
 function Settings:Init()
@@ -179,7 +198,7 @@ function Settings:Init()
 		TextColor3 = Theme.Colors.Text, AnchorPoint = Vector2.new(1, 0), Position = UDim2.fromScale(1, 0), Size = UDim2.fromOffset(40, 40) })
 	close.Parent = window
 	close.Activated:Connect(function()
-		gui.Enabled = false
+		self:Close()
 	end)
 	local list = Instance.new("Frame")
 	list.Name = "List"
@@ -207,6 +226,15 @@ function Settings:Init()
 	gear.Parent = hud
 	gear.Activated:Connect(function()
 		self:Toggle()
+	end)
+
+	-- Gamepad: D-pad down toggles, B closes.
+	UserInputService.InputBegan:Connect(function(input, processed)
+		if gui.Enabled and (input.KeyCode == Enum.KeyCode.ButtonB or (not processed and input.KeyCode == Enum.KeyCode.Escape)) then
+			self:Close()
+		elseif not processed and input.KeyCode == Enum.KeyCode.DPadDown then
+			self:Toggle()
+		end
 	end)
 
 	StateController:Observe(function(state)

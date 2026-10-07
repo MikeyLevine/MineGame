@@ -14,7 +14,10 @@ local Remotes = require(Shared.Remotes)
 local DataService = require(script.Parent.DataService)
 local TravelService = require(script.Parent.TravelService)
 
+local RateLimit = require(script.Parent.Parent.Util.RateLimit)
+
 local PrestigeService = {}
+local prestigeLimit = RateLimit.new(2)
 
 function PrestigeService:CanPrestige(data: DataService.Data): boolean
 	for id, mine in Mines.ById do
@@ -27,6 +30,9 @@ function PrestigeService:CanPrestige(data: DataService.Data): boolean
 end
 
 local function prestige(player: Player): (boolean, string)
+	if not prestigeLimit(player) then
+		return false, "Slow down"
+	end
 	local data = DataService:Get(player)
 	if not data then
 		return false, "Still loading"

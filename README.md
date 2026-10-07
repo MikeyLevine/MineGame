@@ -154,6 +154,26 @@ tools/
   read from the dashboard, so set them there. Once real ids exist, Studio test purchases don't charge
   Robux.
 
+## Controls
+
+| Action | Keyboard | Gamepad |
+|---|---|---|
+| Journal | J | Y |
+| Store | B | D-pad up |
+| Settings | (gear button) | D-pad down |
+| Remote Sell (pass) | G | D-pad left |
+| Close any window | Esc | B |
+
+## Hardening
+
+- Every client-callable remote validates types, ownership, distance and prices on the server.
+- `Server/Util/RateLimit.luau` throttles the store, shop, lift and prestige remotes per player.
+- Settings reject NaN, which would break DataStore saves.
+- If another server takes over a player's session lock, this server stops saving and kicks the
+  player instead of silently dropping progress.
+- A Robux receipt is only reported as granted after the save succeeds. Otherwise Roblox retries, and
+  the stored receipt id prevents a double grant.
+
 ## Testing in Studio
 
 From the server command bar during a playtest (Studio only):

@@ -13,7 +13,10 @@ local DataService = require(script.Parent.DataService)
 local Modifiers = require(Shared.Modifiers)
 local InventoryService = require(script.Parent.InventoryService)
 
+local RateLimit = require(script.Parent.Parent.Util.RateLimit)
+
 local ShopService = {}
+local purchaseLimit = RateLimit.new(0.2)
 
 local STATION_RANGE = 24
 local upgradeStation: BasePart?
@@ -41,6 +44,9 @@ local function sell(player: Player)
 end
 
 local function purchase(player: Player, kind: any): (boolean, string)
+	if not purchaseLimit(player) then
+		return false, "Slow down"
+	end
 	local category = type(kind) == "string" and Equipment.Category(kind)
 	if not category then
 		return false, "Unknown item"

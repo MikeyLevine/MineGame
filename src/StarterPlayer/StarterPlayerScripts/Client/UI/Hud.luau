@@ -5,6 +5,7 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Equipment = require(Shared.Config.Equipment)
@@ -168,17 +169,17 @@ local function build(gui: ScreenGui)
 	-- Remote Seller pass: sell from anywhere.
 	sellButton = Theme.Button({
 		Name = "RemoteSell",
-		Text = "SELL",
+		Text = "SELL (G)",
 		TextSize = 18,
 		BackgroundColor3 = Theme.Colors.Good,
 		AnchorPoint = Vector2.new(1, 0),
 		Position = UDim2.new(0, -8, 0, 0),
-		Size = UDim2.fromOffset(78, 40),
+		Size = UDim2.fromOffset(96, 40),
 		Visible = false,
 	})
 	sellButton.Parent = bagFrame
-	sellButton.Activated:Connect(function()
-		if selling then
+	local function remoteSell()
+		if selling or not sellButton.Visible then
 			return
 		end
 		selling = true
@@ -187,6 +188,13 @@ local function build(gui: ScreenGui)
 		end)
 		task.wait(0.5)
 		selling = false
+	end
+	sellButton.Activated:Connect(remoteSell)
+	-- Keyboard G / gamepad D-pad left.
+	UserInputService.InputBegan:Connect(function(input, processed)
+		if not processed and (input.KeyCode == Enum.KeyCode.G or input.KeyCode == Enum.KeyCode.DPadLeft) then
+			task.spawn(remoteSell)
+		end
 	end)
 
 	-- Active boost timers, under the event chip.

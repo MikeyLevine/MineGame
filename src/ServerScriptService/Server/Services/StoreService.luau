@@ -25,7 +25,11 @@ local Store = require(Shared.Config.Store)
 local DataService = require(script.Parent.DataService)
 local ShopService = require(script.Parent.ShopService)
 
+local RateLimit = require(script.Parent.Parent.Util.RateLimit)
+
 local StoreService = {}
+local skinLimit = RateLimit.new(0.3)
+local sellLimit = RateLimit.new(0.5)
 
 local MAX_RECEIPTS = 300 -- keep the receipt log bounded
 
@@ -106,7 +110,12 @@ function StoreService:GrantProduct(player: Player, key: number | string, receipt
 	if not updated then
 		return false
 	end
-	DataService:SaveNow(player)
+	-- Only report success once the purchase is on disk. If the save fails,
+	-- Roblox retries the receipt later; Purchases[receiptId] (in memory, and on
+	-- disk with any later save) stops it from being granted twice.
+	if not DataService:SaveNow(player) then
+		return false
+	end
 	local notify = Remotes.Event("Notify")
 	if boost then
 		notify:FireClient(player, `{boost.Name} activated! Thanks for your support.`, "Good")
@@ -129,6 +138,9 @@ local function processReceipt(receipt)
 end
 
 local function buySkin(player: Player, skinId: any): (boolean, string)
+	if not skinLimit(player) then
+		return false, "Slow down"
+	end
 	local skin = type(skinId) == "string" and Skins.Get(skinId)
 	local data = DataService:Get(player)
 	if not skin or not data or skin.Source ~= "Cash" or not skin.Price then
@@ -150,6 +162,9 @@ local function buySkin(player: Player, skinId: any): (boolean, string)
 end
 
 local function equipSkin(player: Player, skinId: any): (boolean, string)
+	if not skinLimit(player) then
+		return false, "Slow down"
+	end
 	local skin = type(skinId) == "string" and Skins.Get(skinId)
 	local data = DataService:Get(player)
 	if not skin or not data then
@@ -165,6 +180,9 @@ local function equipSkin(player: Player, skinId: any): (boolean, string)
 end
 
 local function remoteSell(player: Player): (boolean, string)
+	if not sellLimit(player) then
+		return false, ""
+	end
 	if not StoreService:HasPass(player, "RemoteSell") then
 		return false, "Requires the Remote Seller pass"
 	end

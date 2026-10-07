@@ -33,7 +33,7 @@ local function save(player: Player, incoming: any): boolean
 	return DataService:Update(player, function(d)
 		for key, kind in SCHEMA do
 			local value = incoming[key]
-			if type(value) == kind then
+			if type(value) == kind and value == value then -- value == value rejects NaN
 				(d.Settings :: any)[key] = if kind == "number" then math.clamp(value, 0, 1) else value
 			end
 		end

@@ -14,7 +14,10 @@ local Remotes = require(Shared.Remotes)
 
 local DataService = require(script.Parent.DataService)
 
+local RateLimit = require(script.Parent.Parent.Util.RateLimit)
+
 local TravelService = {}
+local liftLimit = RateLimit.new(0.5)
 
 export type Intro = { title: string?, subtitle: string?, tagline: string? }
 
@@ -70,6 +73,9 @@ local function nearCampLift(player: Player): boolean
 end
 
 local function useLift(player: Player, liftId: any): (boolean, string)
+	if not liftLimit(player) then
+		return false, "Slow down"
+	end
 	if type(liftId) ~= "string" then
 		return false, "Unknown destination"
 	end
