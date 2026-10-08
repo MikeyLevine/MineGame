@@ -25,8 +25,8 @@ Daily.Schedule = {
 	{ Multiplier = 6, Boost = "MiningFrenzy", BoostSeconds = 900 },
 }
 
--- Base cash by how many of the five mines the player has completed.
-local BASE_BY_COMPLETED = { [0] = 400, 3000, 25000, 150000, 800000, 2500000 }
+-- Base cash by how many mines the player has completed.
+local BASE_BY_COMPLETED = { [0] = 400, 3000, 25000, 150000, 800000, 2500000, 6000000 }
 
 function Daily.Today(now: number): number
 	return now // 86400
@@ -58,7 +58,7 @@ local function completedMines(data: any): number
 			n += 1
 		end
 	end
-	return math.min(n, 5)
+	return math.min(n, 6)
 end
 
 function Daily.Reward(day: number, data: any): Reward

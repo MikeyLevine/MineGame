@@ -38,7 +38,7 @@ local function prestige(player: Player): (boolean, string)
 		return false, "Still loading"
 	end
 	if not PrestigeService:CanPrestige(data) then
-		return false, "Complete the Unknown Depths first"
+		return false, "Complete the Worldheart first"
 	end
 	local level = data.Prestige + 1
 	DataService:Update(player, function(d)

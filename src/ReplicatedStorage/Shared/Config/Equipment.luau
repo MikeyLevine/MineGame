@@ -15,6 +15,7 @@ export type Pickaxe = {
 	HeadColor: Color3,
 	HeadMaterial: Enum.Material,
 	Glow: boolean?,
+	Requires: Requires?,
 	Blurb: string,
 }
 
@@ -166,6 +167,18 @@ Equipment.Pickaxes = {
 		Glow = true,
 		Blurb = "Made of something that shouldn't exist. Cuts through the Unknown Depths.",
 	},
+	{
+		Name = "Core Pickaxe",
+		Price = 15000000,
+		Power = 70,
+		Hardness = 9,
+		Cooldown = 0.16,
+		HeadColor = Color3.fromRGB(255, 200, 90),
+		HeadMaterial = Enum.Material.Neon,
+		Glow = true,
+		Requires = { MineVisited = "Mine6", Hint = "Forged from the Worldheart. Reach Mine 6" },
+		Blurb = "Tempered in the light of the world's core. Breaks the Gilded Seal.",
+	},
 } :: { Pickaxe }
 
 Equipment.Backpacks = {
@@ -177,6 +190,7 @@ Equipment.Backpacks = {
 	{ Name = "Advanced Backpack", Price = 60000, Capacity = 320, Color = Color3.fromRGB(60, 70, 110), Blurb = "Compressed storage cells. Barely fits through tunnels." },
 	{ Name = "Relic Hauler", Price = 400000, Capacity = 500, Color = Color3.fromRGB(150, 120, 70), Blurb = "Reinforced crates on a frame. Built for temple runs." },
 	{ Name = "Void Satchel", Price = 2500000, Capacity = 800, Color = Color3.fromRGB(80, 40, 120), Blurb = "Bigger on the inside. Don't look in too long." },
+	{ Name = "Core Vault", Price = 12000000, Capacity = 1200, Color = Color3.fromRGB(200, 150, 60), Blurb = "A pack with its own gravity. Ore falls into it." },
 } :: { Backpack }
 
 Equipment.Lamps = {
@@ -259,6 +273,22 @@ Equipment.Suits = {
 		Requires = { MineVisited = "Mine5", Hint = "Needed in the Unknown Depths" },
 		Blurb = "Pressure-rated for the Abyss Core.",
 	},
+	{
+		Name = "Radiant Suit",
+		Price = 10000000,
+		Protection = { Heat = 2, Void = 2, Radiance = 1 },
+		Color = Color3.fromRGB(230, 190, 90),
+		Requires = { MineVisited = "Mine6", Hint = "Needed in the Worldheart" },
+		Blurb = "Mirrored plates that turn away the light of the Radiant Galleries.",
+	},
+	{
+		Name = "Core Suit",
+		Price = 30000000,
+		Protection = { Heat = 2, Void = 2, Radiance = 2 },
+		Color = Color3.fromRGB(255, 230, 160),
+		Requires = { MineVisited = "Mine6", Hint = "Needed in the Worldheart" },
+		Blurb = "Rated for the core of the world itself.",
+	},
 } :: { Suit }
 
 Equipment.Drills = {
@@ -317,6 +347,20 @@ Equipment.Drills = {
 		OverheatSeconds = 1.6,
 		Requires = { PickaxeTier = 9, Hint = "Requires the Void Pickaxe" },
 		Blurb = "Hums at a frequency you can feel in your teeth.",
+	},
+	{
+		Name = "Core Drill",
+		Price = 25000000,
+		Power = 45,
+		Tick = 0.08,
+		Hardness = 9,
+		SplashRadius = 13,
+		SplashMultiplier = 0.65,
+		HeatPerTick = 3.2,
+		CoolPerSecond = 38,
+		OverheatSeconds = 1.4,
+		Requires = { PickaxeTier = 10, Hint = "Requires the Core Pickaxe" },
+		Blurb = "Spins so fast it glows. Do not touch the bit.",
 	},
 } :: { Drill }
 

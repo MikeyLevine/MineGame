@@ -49,4 +49,20 @@ return {
 		BodyColor = Color3.fromRGB(20, 12, 30),
 		GlowColor = Color3.fromRGB(220, 80, 255),
 	},
+	-- Mine 6: golden constructs guarding the Worldheart.
+	Sentinel = {
+		Name = "Gilded Sentinel",
+		Health = 6000,
+		Damage = 30,
+		AttackCooldown = 1.0,
+		Speed = 15,
+		AggroRange = 44,
+		LeashRange = 80,
+		Reward = 60000,
+		Drops = { Starheart = 0.5, Primordium = 0.1 },
+		RespawnSeconds = 80,
+		Scale = 1.8,
+		BodyColor = Color3.fromRGB(96, 74, 34),
+		GlowColor = Color3.fromRGB(255, 220, 120),
+	},
 } :: { [string]: Creature }

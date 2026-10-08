@@ -188,7 +188,7 @@ local function playSequence(wall: Model, mineId: string)
 		humanoid.JumpHeight = savedJump
 	end
 	if mine and mine.Ending then
-		Toasts:Notify("The way to the Heart of the Deep is open.", "Good")
+		Toasts:Notify("The seal is broken. The Origin lies beyond.", "Good")
 	else
 		Toasts:Notify("The way is open. Step into the portal to go deeper.", "Good")
 	end

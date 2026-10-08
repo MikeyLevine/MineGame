@@ -112,6 +112,7 @@ Achievements.List = {
 	{ Id = "Mine3", Name = "Walked Through Fire", Description = "Complete the Lava Depths.", Reward = 250000, Category = "Exploration", Progress = completed("Mine3") },
 	{ Id = "Mine4", Name = "Tomb Raider", Description = "Complete the Ancient Depths.", Reward = 1000000, Category = "Exploration", Progress = completed("Mine4") },
 	{ Id = "Mine5", Name = "Bottom of the World", Description = "Complete the Unknown Depths.", Reward = 5000000, Category = "Exploration", Progress = completed("Mine5") },
+	{ Id = "Mine6", Name = "Heart of the World", Description = "Complete the Worldheart.", Reward = 25000000, Category = "Exploration", Progress = completed("Mine6") },
 	{ Id = "Hidden1", Name = "Secret Keeper", Description = "Find a hidden chamber.", Reward = 2000, Category = "Exploration", Progress = hiddenFound(1) },
 	{ Id = "HiddenAll", Name = "Nothing Stays Hidden", Description = "Find every hidden chamber.", Reward = 500000, Category = "Exploration", Progress = hiddenFound() },
 	{ Id = "Artifact1", Name = "Collector", Description = "Find an artifact.", Reward = 2000, Category = "Exploration", Progress = artifactsFound(1) },

@@ -70,7 +70,7 @@ local function refresh()
 
 	local ok = eligible(state)
 	confirm.Active = ok
-	confirm.Text = if ok then "COLLAPSE THE MINES" else "COMPLETE THE UNKNOWN DEPTHS FIRST"
+	confirm.Text = if ok then "COLLAPSE THE MINES" else "COMPLETE THE WORLDHEART FIRST"
 	confirm.BackgroundColor3 = if ok then Color3.fromRGB(150, 80, 230) else Theme.Colors.Stroke
 	confirm.TextColor3 = if ok then Theme.Colors.Text else Theme.Colors.TextDim
 end

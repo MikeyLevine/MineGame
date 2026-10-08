@@ -19,6 +19,7 @@ return {
 	{ Id = "Mine3", Name = "Walked Through Fire", Description = "Completed the Lava Depths.", Achievement = "Mine3", BadgeId = 2300489584551290 },
 	{ Id = "Mine4", Name = "Tomb Raider", Description = "Completed the Ancient Depths.", Achievement = "Mine4", BadgeId = 4355474383275921 },
 	{ Id = "Mine5", Name = "Bottom of the World", Description = "Completed the Unknown Depths.", Achievement = "Mine5", BadgeId = 0 },
+	{ Id = "Mine6", Name = "Heart of the World", Description = "Completed the Worldheart.", Achievement = "Mine6", BadgeId = 0 },
 	{ Id = "Prestige1", Name = "Born Again", Description = "Collapsed the mines and started over stronger.", Achievement = "Prestige1", BadgeId = 0 },
 	{ Id = "Abyss10", Name = "Deep Diver", Description = "Reached floor 10 of the Endless Abyss.", Achievement = "Abyss10", BadgeId = 0 },
 	{ Id = "Abyss25", Name = "Abyss Walker", Description = "Reached floor 25 of the Endless Abyss.", Achievement = "Abyss25", BadgeId = 0 },

@@ -1,6 +1,6 @@
 # Deep Mine
 
-Solo-first Roblox mining progression game. See `CLAUDE.md` for the full design.
+Solo-first Roblox mining progression game with six mines, an endless abyss and prestige. See `CLAUDE.md` for the full design.
 
 **Status:** Phases 1–5 are done. All five mines are playable end to end: Abandoned Coal Mine → Crystal
 Caverns → Lava Depths → Ancient Depths → Unknown Depths. Each has its own objectives and ascension, and the
@@ -153,6 +153,25 @@ tools/
   `Config/Store.luau` and `Config/Skins.luau`. Until then those items show "Coming soon". Prices are
   read from the dashboard, so set them there. Once real ids exist, Studio test purchases don't charge
   Robux.
+
+## Mine 6: The Worldheart
+
+The final mine, about 270 studs below Mine 5 (`tools/build/mine6.luau`). You reach it through a
+portal beyond the Heart of the Deep: Mine 5 now has `NextMine = "Mine6"`, and the `Ending` flag (ending
+screen, prestige requirement) moved to Mine 6. Players who had already finished Mine 5 find the
+portal open. The Abyss still unlocks after Mine 5.
+
+- **Zones:**
+  - Gilded Vestibule. Sunsteel can be mined with the Void Pickaxe, so new arrivals can earn.
+  - Gilded Seal, which needs the Core Pickaxe (tier 10).
+  - Radiant Galleries (Radiance level 1: Radiant Suit).
+  - Star Gate.
+  - The Worldheart (Radiance level 2: Core Suit, Gilded Sentinels), with the World Core overhead.
+  - The Origin Seal, then the Origin (Origin Shard artifact).
+  - Hidden: the Sun Treasury (Sun Crown).
+- **New ores:** Sunsteel, Corestone, Starheart, Primordium.
+- **New gear:** Core Pickaxe, Core Vault, Radiant and Core suits, Core Drill.
+- **Terrain materials** Asphalt, Cobblestone, Snow and Mud are recoloured for this mine only.
 
 ## Endless Abyss and daily rewards
 

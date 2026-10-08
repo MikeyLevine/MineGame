@@ -35,6 +35,7 @@ return {
 	GlyphPress = { Id = "rbxassetid://9116224180", Volume = 0.5, Speed = 0.8 },
 	ArtifactFound = { Id = "rbxassetid://9116418291", Volume = 0.8 },
 	LavaAmbience = { Id = "rbxassetid://9112822924", Volume = 0.35 },
+	CoreAmbience = { Id = "rbxassetid://9112822924", Volume = 0.3, Speed = 0.6 }, -- the lava rumble, slowed: the world's core
 	CaveAmbience = { Id = "rbxassetid://9120526794", Volume = 0.25 },
 	SurfaceAmbience = { Id = "rbxassetid://9112877174", Volume = 0.3 },
 }

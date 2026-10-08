@@ -62,7 +62,7 @@ function Ending:Init()
 	local over = Theme.Label({ Text = "YOU REACHED", TextSize = 20, TextColor3 = Theme.Colors.Accent,
 		Size = UDim2.new(1, 0, 0, 24), TextXAlignment = Enum.TextXAlignment.Center })
 	over.Parent = panel
-	local title = Theme.Label({ Text = "THE BOTTOM OF THE WORLD", TextSize = 48, FontFace = Theme.FontHeavy,
+	local title = Theme.Label({ Text = "THE HEART OF THE WORLD", TextSize = 48, FontFace = Theme.FontHeavy,
 		Position = UDim2.fromOffset(0, 26), Size = UDim2.new(1, 0, 0, 56), TextXAlignment = Enum.TextXAlignment.Center })
 	local stroke = Instance.new("UIStroke")
 	stroke.Thickness = 2
@@ -70,7 +70,7 @@ function Ending:Init()
 	stroke.Parent = title
 	title.Parent = panel
 	local sub = Theme.Label({
-		Text = "Every depth is yours. The Heart of the Deep waits beyond the Last Seal.\nWhen you are ready, collapse the mines and start again, stronger (or later, at the camp obelisk).",
+		Text = "Every depth is yours. The Origin waits beyond the seal.\nCollapse the mines to start again stronger, now or later at camp.",
 		TextSize = 18, FontFace = Theme.FontMedium, TextColor3 = Theme.Colors.TextDim, TextWrapped = true,
 		Position = UDim2.fromOffset(0, 96), Size = UDim2.new(1, 0, 0, 50), TextXAlignment = Enum.TextXAlignment.Center,
 	})

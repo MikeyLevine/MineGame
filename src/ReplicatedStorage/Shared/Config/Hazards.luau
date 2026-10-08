@@ -26,6 +26,11 @@ return {
 		Color = Color3.fromRGB(170, 70, 255),
 		Warning = "The air is eating through you! You need a Void Suit.",
 	},
+	Radiance = {
+		DisplayName = "Searing radiance",
+		Color = Color3.fromRGB(255, 230, 150),
+		Warning = "The light is burning you! You need a Radiant Suit.",
+	},
 	Acid = {
 		DisplayName = "Acid",
 		Color = Color3.fromRGB(110, 255, 90),

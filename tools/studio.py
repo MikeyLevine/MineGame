@@ -24,7 +24,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-BUILD_ORDER = ["lib.luau", "world.luau", "mine1.luau", "mine2.luau", "mine3.luau", "mine4.luau", "mine5.luau", "camp.luau"]
+BUILD_ORDER = ["lib.luau", "world.luau", "mine1.luau", "mine2.luau", "mine3.luau", "mine4.luau", "mine5.luau", "mine6.luau", "camp.luau"]
 SRC = ROOT / "src"
 VINEGAR = Path.home() / ".local/share/vinegar"
 WINE = VINEGAR / "kombucha/bin/wine"

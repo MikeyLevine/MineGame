@@ -99,6 +99,25 @@ Artifacts.List = {
 		Lore = "The bottom of the world. Every mine above was dug by someone looking for this. You found it.",
 		RequiresCompleted = "Mine5",
 	},
+	{
+		Id = "SunCrown",
+		Name = "Sun Crown",
+		Mine = "Mine6",
+		Reward = 8000000,
+		Color = Color3.fromRGB(255, 205, 90),
+		Shape = "Crown",
+		Lore = "Hidden in a treasury no one was meant to find. Whoever wore it ruled the light down here.",
+	},
+	{
+		Id = "OriginShard",
+		Name = "Origin Shard",
+		Mine = "Mine6",
+		Reward = 25000000,
+		Color = Color3.fromRGB(140, 255, 230),
+		Shape = "Disk",
+		Lore = "A splinter of the very first stone. The world grew outward from this. Now it's in your backpack.",
+		RequiresCompleted = "Mine6",
+	},
 } :: { Artifact }
 
 function Artifacts.Get(id: string): Artifact?

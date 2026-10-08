@@ -58,6 +58,11 @@ end
 carveTunnel(crawl, 5)
 T:FillBlock(CFrame.new(0, -1096 + 18, SEAL_Z + 8), Vector3.new(54, 36, 16), AIR)
 carveTunnel({ Vector3.new(0, -1089, SEAL_Z - 2), Vector3.new(0, -1089, SEAL_Z - 14) }, 8)
+-- Beyond the Heart: a passage south to the portal into Mine 6. It lies past
+-- the edge of the mine's rock block, so give it rock first.
+T:FillBlock(CFrame.new(0, -1080, -1100), Vector3.new(80, 60, 60), Enum.Material.Salt)
+carveTunnel({ Vector3.new(0, -1089, -1056), Vector3.new(0, -1089, -1084) }, 8)
+carveChamber({ C = Vector2.new(0, -1094), F = -1096, rx = 12, rz = 8, Tall = true })
 
 -- Alien moss in the forest, dark glassy floor in the core.
 T:ReplaceMaterial(Region3.new(Vector3.new(-110, F_FOREST - 8, -880), Vector3.new(110, F_FOREST + 2, -760)):ExpandToGrid(4), 4,
@@ -121,6 +126,7 @@ zoneVolume(volumes, "Forest", CFrame.new(0, -1085, -810), Vector3.new(300, 110, 
 zoneVolume(volumes, "Core", CFrame.new(0, -1092, -950), Vector3.new(260, 110, 140))
 zoneVolume(volumes, "Final", CFrame.new(0, -1090, -1008), Vector3.new(70, 60, 24), 1)
 zoneVolume(volumes, "Heart", CFrame.new(0, -1090, -1044), Vector3.new(50, 50, 44), 2)
+zoneVolume(volumes, "Heart", CFrame.new(0, -1090, -1090), Vector3.new(50, 50, 48), 2)
 zoneVolume(volumes, "Hollow", CFrame.new(-151, -1083, -836), Vector3.new(32, 40, 30), 2)
 
 -- Corrosive air: the forest needs a Void Suit, the core an Abyss Suit.
@@ -352,6 +358,9 @@ do
 		cage:SetAttribute("LiftId", "SporeForest")
 	end
 end
+
+-- The Heart of the Deep wasn't the bottom after all.
+buildPortal(mine, { X = 0, Z = -1098, ProbeY = -1086, FromMine = "Mine5", ToMine = "Mine6" })
 
 local counts = {}
 for zone, zf in zoneFolders do
