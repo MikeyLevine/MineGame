@@ -13,11 +13,11 @@ export type Badge = {
 }
 
 return {
-	{ Id = "Welcome", Name = "Welcome to Deep Mine", Description = "Joined Deep Mine for the first time.", BadgeId = 0 },
-	{ Id = "Mine1", Name = "Out of the Dark", Description = "Ascended from the Abandoned Coal Mine.", Achievement = "Mine1", BadgeId = 0 },
-	{ Id = "Mine2", Name = "Crystal Clear", Description = "Completed the Crystal Caverns.", Achievement = "Mine2", BadgeId = 0 },
-	{ Id = "Mine3", Name = "Walked Through Fire", Description = "Completed the Lava Depths.", Achievement = "Mine3", BadgeId = 0 },
-	{ Id = "Mine4", Name = "Tomb Raider", Description = "Completed the Ancient Depths.", Achievement = "Mine4", BadgeId = 0 },
+	{ Id = "Welcome", Name = "Welcome to Deep Mine", Description = "Joined Deep Mine for the first time.", BadgeId = 3663263680648484 },
+	{ Id = "Mine1", Name = "Out of the Dark", Description = "Ascended from the Abandoned Coal Mine.", Achievement = "Mine1", BadgeId = 2252731954318548 },
+	{ Id = "Mine2", Name = "Crystal Clear", Description = "Completed the Crystal Caverns.", Achievement = "Mine2", BadgeId = 750892789806167 },
+	{ Id = "Mine3", Name = "Walked Through Fire", Description = "Completed the Lava Depths.", Achievement = "Mine3", BadgeId = 2300489584551290 },
+	{ Id = "Mine4", Name = "Tomb Raider", Description = "Completed the Ancient Depths.", Achievement = "Mine4", BadgeId = 4355474383275921 },
 	{ Id = "Mine5", Name = "Bottom of the World", Description = "Completed the Unknown Depths.", Achievement = "Mine5", BadgeId = 0 },
 	{ Id = "Prestige1", Name = "Born Again", Description = "Collapsed the mines and started over stronger.", Achievement = "Prestige1", BadgeId = 0 },
 	{ Id = "Abyss10", Name = "Deep Diver", Description = "Reached floor 10 of the Endless Abyss.", Achievement = "Abyss10", BadgeId = 0 },
