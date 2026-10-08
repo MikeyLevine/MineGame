@@ -21,6 +21,7 @@ local Modifiers = require(Shared.Modifiers)
 local Remotes = require(Shared.Remotes)
 local Skins = require(Shared.Config.Skins)
 local Store = require(Shared.Config.Store)
+local Pets = require(Shared.Config.Pets)
 
 local DataService = require(script.Parent.DataService)
 local ShopService = require(script.Parent.ShopService)
@@ -52,8 +53,17 @@ function StoreService:HasPass(player: Player, passId: string): boolean
 	return player:GetAttribute("Pass_" .. passId) == true
 end
 
--- Which boost or Robux skin a Developer Product id (or item id) refers to.
--- Ids of 0 mean "not created yet" and never match a real receipt.
+-- Which boost, Robux skin or Robux pet a Developer Product id (or item id)
+-- refers to. Ids of 0 mean "not created yet" and never match a real receipt.
+local function resolvePet(key: number | string): Pets.Pet?
+	for _, p in Pets.List do
+		if p.ProductId ~= nil and (p.Id == key or (p.ProductId > 0 and p.ProductId == key)) then
+			return p
+		end
+	end
+	return nil
+end
+
 local function resolve(key: number | string): (Store.Boost?, Skins.Skin?)
 	for _, b in Store.Boosts do
 		if b.Id == key or (b.ProductId > 0 and b.ProductId == key) then
@@ -80,7 +90,8 @@ function StoreService:GrantProduct(player: Player, key: number | string, receipt
 		return true -- already granted on an earlier attempt
 	end
 	local boost, skin = resolve(key)
-	if not boost and not skin then
+	local pet = if boost or skin then nil else resolvePet(key)
+	if not boost and not skin and not pet then
 		warn("[StoreService] Unknown product", key)
 		return false
 	end
@@ -105,6 +116,8 @@ function StoreService:GrantProduct(player: Player, key: number | string, receipt
 		elseif skin then
 			d.Skins[skin.Id] = true
 			d.EquippedSkin = skin.Id
+		elseif pet then
+			require(script.Parent.PetService):GrantInto(d, pet.Id)
 		end
 	end)
 	if not updated then
@@ -117,7 +130,10 @@ function StoreService:GrantProduct(player: Player, key: number | string, receipt
 		return false
 	end
 	local notify = Remotes.Event("Notify")
-	if boost then
+	if pet then
+		require(script.Parent.PetService):Publish(player)
+		notify:FireClient(player, `{pet.Name} joined you! Thanks for your support.`, "Good")
+	elseif boost then
 		notify:FireClient(player, `{boost.Name} activated! Thanks for your support.`, "Good")
 	else
 		notify:FireClient(player, `Unlocked the {(skin :: Skins.Skin).Name} skin! Thanks for your support.`, "Good")

@@ -127,6 +127,13 @@ local COMMANDS: { [string]: (Player, ...any) -> any } = {
 		end)
 		return "ok"
 	end,
+	-- GivePet("Pebble", 2): add pets without hatching.
+	GivePet = function(player, petId, count)
+		DataService:Update(player, function(d)
+			d.Pets[petId] = (d.Pets[petId] or 0) + (tonumber(count) or 1)
+		end)
+		return "ok"
+	end,
 	SetAbyssBest = function(player, floor)
 		DataService:Update(player, function(d)
 			d.Abyss.Best = tonumber(floor) or 0

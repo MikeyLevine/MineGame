@@ -18,6 +18,7 @@ local ORDER = {
 	"TravelService",
 	"AbyssService",
 	"DailyService",
+	"PetService",
 	"LeaderboardService",
 	"BadgeAwardService",
 	"GroupRewardService",

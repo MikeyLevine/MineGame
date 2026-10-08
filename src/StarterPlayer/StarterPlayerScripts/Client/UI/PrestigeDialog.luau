@@ -63,7 +63,7 @@ local function refresh()
 			table.insert(lines, `<font color="#76CC70">GAIN</font>  The {skin.Name} pickaxe skin`)
 		end
 	end
-	table.insert(lines, `<font color="#96DCD2">KEEP</font>  Artifacts, achievements, stats, skins, game passes, boosts and settings`)
+	table.insert(lines, `<font color="#96DCD2">KEEP</font>  Artifacts, achievements, stats, pets, skins, game passes, boosts and settings`)
 	table.insert(lines, `<font color="#E25448">LOSE</font>  All cash, your backpack contents, every tool and equipment tier, opened gates and mine completion`)
 	table.insert(lines, `<font color="#B0A494">NOTE</font>  Upgrades cost {pct(Modifiers.PRESTIGE_PRICE ^ nextLevel)} more at this level`)
 	gainLabel.Text = table.concat(lines, "\n\n")

@@ -223,6 +223,60 @@ do
 	prompt.Parent = promptPart
 end
 
+-- Pet Nursery: a fenced pen with a big egg on a straw nest. Its prompt opens
+-- the pets window on the Eggs tab (PetService); hatching requires being here.
+do
+	local model = folder("PetNursery", camp, "Model")
+	local base = Vector3.new(-50, 0, 30)
+	local floor = floorBelow(base + Vector3.new(0, 20, 0), 40) or base
+	-- Local -Z (forward) faces the camp centre (+X); the open side and the sign face it.
+	local center = CFrame.lookAt(floor, floor + Vector3.new(10, 0, 0))
+	P({ Name = "Straw", Size = Vector3.new(12, 0.4, 12), CFrame = center * CFrame.new(0, 0.2, 0), Material = Enum.Material.Fabric,
+		Color = Color3.fromRGB(200, 170, 100), Parent = model })
+	-- Low fence on the back and both sides, open towards camp.
+	for _, side in { { 0, 6, 12, 0 }, { -6, 0, 0.4, 12 }, { 6, 0, 0.4, 12 } } do
+		local x, z, w, d = side[1], side[2], side[3], side[4]
+		local along = if w > 1 then Vector3.new(1, 0, 0) else Vector3.new(0, 0, 1)
+		local length = math.max(w, d)
+		for i = 0, 3 do
+			local t = -length / 2 + i * length / 3
+			P({ Name = "FencePost", Size = Vector3.new(0.5, 3, 0.5), CFrame = center * CFrame.new(Vector3.new(x, 1.5, z) + along * t),
+				Material = Enum.Material.Wood, Color = WOOD, Parent = model })
+		end
+		P({ Name = "FenceRail", Size = if w > 1 then Vector3.new(length, 0.35, 0.3) else Vector3.new(0.3, 0.35, length),
+			CFrame = center * CFrame.new(x, 2.4, z), Material = Enum.Material.Wood, Color = WOOD, Parent = model })
+	end
+	-- The big egg.
+	local egg = P({ Name = "BigEgg", Shape = Enum.PartType.Ball, Size = Vector3.new(4.4, 5.6, 4.4), CFrame = center * CFrame.new(0, 3, 0),
+		Material = Enum.Material.SmoothPlastic, Color = Color3.fromRGB(240, 226, 196), Parent = model })
+	for i = 1, 7 do
+		local a = i / 7 * math.pi * 2
+		P({ Name = "Spot", Shape = Enum.PartType.Ball, Size = Vector3.new(0.9, 0.9, 0.9),
+			CFrame = egg.CFrame * CFrame.new(math.cos(a) * 2.05, (i % 3 - 1) * 1.2, math.sin(a) * 2.05), Material = Enum.Material.SmoothPlastic,
+			Color = Color3.fromRGB(150, 110, 70), CanCollide = false, Parent = model })
+	end
+	for i = 1, 6 do
+		local a = i / 6 * math.pi * 2
+		P({ Name = "Nest", Size = Vector3.new(2.2, 0.8, 0.9), CFrame = center * CFrame.new(math.cos(a) * 2.4, 0.7, math.sin(a) * 2.4)
+			* CFrame.Angles(0, -a, 0.3), Material = Enum.Material.Fabric, Color = Color3.fromRGB(170, 140, 80), Parent = model })
+	end
+	sign(model, center * CFrame.new(0, 5.4, 5.6), Vector3.new(7, 1.6, 0.25), "PET NURSERY", Color3.fromRGB(255, 220, 150))
+	for _, x in { -3.2, 3.2 } do
+		P({ Name = "SignPost", Size = Vector3.new(0.5, 6, 0.5), CFrame = center * CFrame.new(x, 3, 5.8), Material = Enum.Material.Wood,
+			Color = WOOD, Parent = model })
+	end
+	local promptPart = invisible("PromptPart", center * CFrame.new(0, 2.5, -3), Vector3.new(1, 1, 1), model)
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.ActionText = "Hatch Eggs"
+	prompt.ObjectText = "Pet Nursery"
+	prompt.KeyboardKeyCode = Enum.KeyCode.E
+	prompt.GamepadKeyCode = Enum.KeyCode.ButtonX
+	prompt.HoldDuration = 0
+	prompt.MaxActivationDistance = 12
+	prompt.RequiresLineOfSight = false
+	prompt.Parent = promptPart
+end
+
 -- Leaderboard board (deepest Abyss divers / most prestiges), filled in by
 -- LeaderboardService, with the group-reward plaque under it. Mirrors the
 -- prestige obelisk on the other side of camp and faces the camp centre.

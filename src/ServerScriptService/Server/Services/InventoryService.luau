@@ -23,7 +23,10 @@ end
 
 function InventoryService:Capacity(data: DataService.Data, player: Player?): number
 	local backpack = Equipment.Backpacks[data.BackpackTier] or Equipment.Backpacks[1]
-	local multiplier = if player then Modifiers.Capacity(Modifiers.PlayerPasses(player)) else 1
+	local hasPass = if player then Modifiers.PlayerPasses(player) else function(_: string): boolean
+		return false
+	end
+	local multiplier = Modifiers.Capacity(hasPass, data)
 	return math.floor(backpack.Capacity * multiplier)
 end
 

@@ -14,6 +14,7 @@ local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Format = require(Shared.Util.Format)
 local Remotes = require(Shared.Remotes)
 local Skins = require(Shared.Config.Skins)
+local PetsConfig = require(Shared.Config.Pets)
 local StoreConfig = require(Shared.Config.Store)
 
 local Theme = require(script.Parent.Theme)
@@ -30,7 +31,7 @@ local refreshers: { () -> () } = {}
 local robuxPrices: { [string]: number } = {} -- "pass:<id>" / "product:<id>" -> price
 local busy = false
 
-local TABS = { "Passes", "Boosts", "Skins" }
+local TABS = { "Passes", "Boosts", "Skins", "Pets" }
 
 local function priceText(key: string, id: number): string
 	if id <= 0 then
@@ -193,6 +194,45 @@ local SOURCE_LABEL = {
 	Robux = "Premium",
 	Pass = "VIP",
 }
+
+-- Robux pets: always that exact pet (never random).
+local function buildPets(parent: Frame)
+	local scroll = page("Pets", parent)
+	listLayout(scroll, 8)
+	Theme.Label({ Name = "Note", LayoutOrder = 0, Text = "Store pets are yours forever and never random. Eggs at the Pet Nursery use in-game cash.",
+		TextSize = 14, FontFace = Theme.FontMedium, TextColor3 = Theme.Colors.TextDim, TextWrapped = true,
+		Size = UDim2.new(1, -10, 0, 20) }).Parent = scroll
+	local order = 0
+	for _, pet in PetsConfig.List do
+		if pet.ProductId == nil then
+			continue
+		end
+		order += 1
+		local key = "product:" .. pet.Id
+		fetchPrice(key, pet.ProductId, Enum.InfoType.Product)
+		local f = card(scroll, pet.Id, order, pet.Accent)
+		f.Size = UDim2.new(1, -10, 0, 74)
+		Theme.Label({ Text = pet.Name, TextSize = 20, FontFace = Theme.FontHeavy, TextColor3 = pet.Accent,
+			Size = UDim2.new(1, -140, 0, 24) }).Parent = f
+		local owned = Theme.Label({ Name = "Description", Text = "", TextSize = 15, FontFace = Theme.FontMedium,
+			TextColor3 = Theme.Colors.TextDim, Position = UDim2.fromOffset(0, 26), Size = UDim2.new(1, -140, 0, 22) })
+		owned.Parent = f
+		local buy = Theme.Button({ Name = "Buy", TextSize = 16, AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.fromScale(1, 0.5),
+			Size = UDim2.fromOffset(124, 40) })
+		buy.Parent = f
+		buy.Activated:Connect(function()
+			if buy.Active and (pet.ProductId or 0) > 0 then
+				MarketplaceService:PromptProductPurchase(player, pet.ProductId :: number)
+			end
+		end)
+		table.insert(refreshers, function()
+			local state = StateController.State
+			local count = state and state.Pets and state.Pets[pet.Id] or 0
+			owned.Text = `{pet.Rarity} pet: {PetsConfig.BonusText(pet)}` .. (if count > 0 then `  (you own {count})` else "")
+			setButton(buy, priceText(key, pet.ProductId or 0), (pet.ProductId or 0) > 0, Theme.Colors.Good)
+		end)
+	end
+end
 
 local function buildSkins(parent: Frame)
 	local scroll = page("Skins", parent)
@@ -368,6 +408,7 @@ function Store:Init()
 	buildPasses(window)
 	buildBoosts(window)
 	buildSkins(window)
+	buildPets(window)
 	Store:Select("Passes")
 
 	gui.Parent = player:WaitForChild("PlayerGui")

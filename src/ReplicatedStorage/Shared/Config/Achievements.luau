@@ -6,6 +6,7 @@
 local Mines = require(script.Parent.Mines)
 local Artifacts = require(script.Parent.Artifacts)
 local Equipment = require(script.Parent.Equipment)
+local Pets = require(script.Parent.Pets)
 
 export type Achievement = {
 	Id: string,
@@ -133,6 +134,19 @@ Achievements.List = {
 	{ Id = "Abyss10", Name = "Deep Diver", Description = "Reach floor 10 of the Endless Abyss.", Reward = 200000, Category = "Abyss", Progress = abyss(10) },
 	{ Id = "Abyss25", Name = "Abyss Walker", Description = "Reach floor 25 of the Endless Abyss.", Reward = 2000000, Category = "Abyss", Progress = abyss(25) },
 	{ Id = "Abyss50", Name = "Bottomless", Description = "Reach floor 50 of the Endless Abyss.", Reward = 10000000, Category = "Abyss", Progress = abyss(50) },
+
+	-- Pets
+	{ Id = "Pet1", Name = "New Friend", Description = "Hatch your first pet.", Reward = 2000, Category = "Pets", Progress = stat("Hatched", 1) },
+	{ Id = "Pet100", Name = "Egg Enthusiast", Description = "Hatch 100 pets.", Reward = 2000000, Category = "Pets", Progress = stat("Hatched", 100) },
+	{ Id = "PetLegendary", Name = "Legendary Bond", Description = "Own a legendary pet.", Reward = 1000000, Category = "Pets", Progress = function(data)
+		for id, count in data.Pets or {} do
+			local p = Pets.Get(id)
+			if p and p.Rarity == "Legendary" and count > 0 then
+				return 1, 1
+			end
+		end
+		return 0, 1
+	end },
 
 	-- Daily streaks
 	{ Id = "Daily7", Name = "Creature of Habit", Description = "Claim daily rewards 7 days in a row.", Reward = 25000, Category = "Daily", Progress = function(data)

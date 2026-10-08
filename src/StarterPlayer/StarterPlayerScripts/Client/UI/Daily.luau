@@ -196,6 +196,13 @@ function DailyUI:Init()
 	end)
 
 	Remotes.Event("OpenDaily").OnClientEvent:Connect(function()
+		-- Don't pop over a window the player is using; the red dot still shows.
+		for _, name in { "Pets", "Store", "Shop", "LiftMenu", "Journal", "Settings", "PrestigeDialog", "Ending" } do
+			local other = player.PlayerGui:FindFirstChild(name)
+			if other and other:IsA("ScreenGui") and other.Enabled then
+				return
+			end
+		end
 		DailyUI:Open()
 	end)
 	UserInputService.InputBegan:Connect(function(input, processed)

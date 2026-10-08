@@ -20,6 +20,7 @@ local EVENTS = {
 	"ObjectivesPulse", -- S->C () draw attention to the objectives panel
 	"OpenPrestige", -- S->C () show the prestige dialog
 	"OpenDaily", -- S->C () a daily reward is waiting
+	"OpenPets", -- S->C (tab) open the pets window (Pet Nursery prompt)
 	"ArtifactFound", -- S->C (artifactId) show the discovery card
 	"Creature", -- S->C ({ event = "alert" | "bite" | "death", position }) creature sounds/effects
 	"Ending", -- S->C () the player completed the final mine
@@ -36,6 +37,10 @@ local FUNCTIONS = {
 	"RemoteSell", -- C->S () -> (ok, message) Remote Seller pass
 	"Prestige", -- C->S () -> (ok, message)
 	"ClaimDaily", -- C->S () -> (ok, message)
+	"HatchEgg", -- C->S (eggId) -> (ok, "petId" or "petId:new" | message)
+	"EquipPet", -- C->S (petId) -> (ok, message)
+	"UnequipPet", -- C->S (petId) -> (ok, message)
+	"ReleasePet", -- C->S (petId) -> (ok, message)
 }
 
 local Remotes = {}

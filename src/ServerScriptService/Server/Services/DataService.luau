@@ -40,6 +40,8 @@ export type Data = {
 	Daily: { Streak: number, LastDay: number, Best: number }, -- daily rewards (LastDay = UTC day number)
 	Badges: { [string]: boolean }, -- Roblox badges already awarded (Config/Badges ids)
 	GroupRewardClaimed: boolean,
+	Pets: { [string]: number }, -- pet id -> how many owned (Config/Pets)
+	EquippedPets: { string }, -- equipped pet ids (duplicates allowed up to the owned count)
 	Stats: {
 		TotalMined: number,
 		TotalEarned: number,
@@ -47,6 +49,7 @@ export type Data = {
 		CreaturesDefeated: number,
 		RichVeins: number,
 		BiggestSale: number,
+		Hatched: number?,
 	},
 }
 
@@ -80,7 +83,7 @@ local function template(): Data
 		Gates = {},
 		Mines = {},
 		Artifacts = {},
-		Stats = { TotalMined = 0, TotalEarned = 0, Mined = {}, CreaturesDefeated = 0, RichVeins = 0, BiggestSale = 0 },
+		Stats = { TotalMined = 0, TotalEarned = 0, Mined = {}, CreaturesDefeated = 0, RichVeins = 0, BiggestSale = 0, Hatched = 0 },
 		Achievements = {},
 		Settings = { Sfx = 1, Ambience = 1, Shake = true, Objectives = true, Hints = true },
 		Prestige = 0,
@@ -93,6 +96,8 @@ local function template(): Data
 		Daily = { Streak = 0, LastDay = -1, Best = 0 },
 		Badges = {},
 		GroupRewardClaimed = false,
+		Pets = {},
+		EquippedPets = {},
 	}
 end
 

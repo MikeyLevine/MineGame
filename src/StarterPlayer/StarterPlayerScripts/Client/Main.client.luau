@@ -32,6 +32,7 @@ local ORDER: { ModuleScript } = {
 	Controllers.DrillController,
 	Controllers.RelicController,
 	Controllers.CreatureController,
+	Controllers.PetController,
 	UI.PrestigeDialog,
 	UI.Ending,
 	UI.Journal,
@@ -39,6 +40,7 @@ local ORDER: { ModuleScript } = {
 	UI.Settings,
 	UI.Store,
 	UI.Daily,
+	UI.Pets,
 	UI.Hints,
 }
 

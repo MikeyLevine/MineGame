@@ -173,6 +173,25 @@ portal open. The Abyss still unlocks after Mine 5.
 - **New gear:** Core Pickaxe, Core Vault, Radiant and Core suits, Core Drill.
 - **Terrain materials** Asphalt, Cobblestone, Snow and Mud are recoloured for this mine only.
 
+## Pets
+
+`Config/Pets.luau`, `PetService` (server), `PetController` (client rendering) and `UI/Pets.luau`.
+
+- **Hatching.** You hatch eggs at the camp **Pet Nursery** with in-game cash. There's one egg per
+  mine, unlocked by reaching that mine, and each holds 4 pets with weighted chances (common to
+  legendary).
+- **Equipping.** Up to 3 pets can be equipped. Each gives one bonus (sell, mining power, rich-vein
+  luck or backpack space), applied in `Shared/Modifiers`. Duplicates stack in `data.Pets` (counts);
+  `data.EquippedPets` lists the equipped ids.
+- **Releasing** refunds 25% of the egg price. Pets are kept through prestige.
+- **Drawing.** Pets are drawn on each client from the `EquippedPets` player attribute, so movement
+  is smooth with no network traffic.
+- **Robux pets** (Nebula Fox, Aurora Whale; `ProductId` in Config/Pets) are direct purchases,
+  never random. Eggs only cost in-game cash, and there are no cash packs, so the game still has
+  no paid random items. **Don't add cash-for-Robux packs while eggs exist** without revisiting the
+  maturity questionnaire.
+- **Keyboard:** P opens the pets window.
+
 ## Endless Abyss and daily rewards
 
 - **Endless Abyss** (`Config/Abyss.luau`, `AbyssService`). It unlocks after completing Mine 5 (or any
@@ -216,6 +235,7 @@ portal open. The Abyss still unlocks after Mine 5.
 | Settings | (gear button) | D-pad down |
 | Remote Sell (pass) | G | D-pad left |
 | Daily rewards | (DAILY button) | D-pad right |
+| Pets | P | (PETS button / Nursery prompt) |
 | Close any window | Esc | B |
 
 ## Hardening

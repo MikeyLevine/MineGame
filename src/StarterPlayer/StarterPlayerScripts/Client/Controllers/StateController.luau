@@ -29,6 +29,8 @@ export type State = {
 	RunMined: { [string]: number }?,
 	Abyss: { Best: number }?,
 	Daily: { Streak: number, LastDay: number, Best: number }?,
+	Pets: { [string]: number }?,
+	EquippedPets: { string }?,
 	Boosts: { [string]: number }, -- boost id -> Unix time it ends
 	Skins: { [string]: boolean },
 	EquippedSkin: string,
@@ -55,7 +57,7 @@ function StateController:Capacity(): number
 		return 0
 	end
 	local backpack = Equipment.Backpacks[s.BackpackTier] or Equipment.Backpacks[#Equipment.Backpacks]
-	return math.floor(backpack.Capacity * Modifiers.Capacity(Modifiers.PlayerPasses(Players.LocalPlayer)))
+	return math.floor(backpack.Capacity * Modifiers.Capacity(Modifiers.PlayerPasses(Players.LocalPlayer), s))
 end
 
 -- Whether this player owns a game pass (mirrored by the server as an attribute).

@@ -5,6 +5,8 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local Pets = require(script.Parent.Config.Pets)
+
 local Modifiers = {}
 
 Modifiers.PRESTIGE_SELL = 1.25
@@ -24,6 +26,7 @@ function Modifiers.Sell(data: any, hasPass: (string) -> boolean, now: number): n
 	if boostActive(data, "OreBuyerBonus", now) then
 		m *= 1.5
 	end
+	m *= 1 + Pets.Bonus(data, "Sell")
 	return m * ((ReplicatedStorage:GetAttribute("SellMultiplier") :: number?) or 1)
 end
 
@@ -32,7 +35,7 @@ function Modifiers.Power(data: any, _hasPass: (string) -> boolean, now: number):
 	if boostActive(data, "MiningFrenzy", now) then
 		m *= 2
 	end
-	return m
+	return m * (1 + Pets.Bonus(data, "Power"))
 end
 
 -- Multiplier on the zone's rich-vein chance, applied per player when they
@@ -45,11 +48,12 @@ function Modifiers.Luck(data: any, hasPass: (string) -> boolean, now: number): n
 	if boostActive(data, "LuckyCharm", now) then
 		m *= 3
 	end
-	return m
+	return m * (1 + Pets.Bonus(data, "Luck"))
 end
 
-function Modifiers.Capacity(hasPass: (string) -> boolean): number
-	return if hasPass("BigPockets") then 1.5 else 1
+function Modifiers.Capacity(hasPass: (string) -> boolean, data: any?): number
+	local m = if hasPass("BigPockets") then 1.5 else 1
+	return m * (1 + (if data then Pets.Bonus(data, "Capacity") else 0))
 end
 
 -- Equipment prices rise with each prestige level.
