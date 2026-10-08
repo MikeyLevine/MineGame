@@ -93,9 +93,9 @@ Pets.List = {
 	pet("CoreWyrm", "Core Wyrm", "Legendary", "GildedEgg", 8, "Sell", 0.35, Color3.fromRGB(255, 140, 50), Color3.fromRGB(255, 240, 200), "Bat", true),
 	pet("OriginSpirit", "Origin Spirit", "Legendary", "GildedEgg", 2, "Luck", 0.60, Color3.fromRGB(120, 255, 230), Color3.fromRGB(255, 255, 255), "Wisp", true),
 	-- Robux (direct purchase, never random)
-	{ Id = "NebulaFox", Name = "Nebula Fox", Rarity = "Legendary", ProductId = 0, Bonus = { Type = "Sell", Amount = 0.25 },
+	{ Id = "NebulaFox", Name = "Nebula Fox", Rarity = "Legendary", ProductId = 3717275134, Bonus = { Type = "Sell", Amount = 0.25 },
 		Body = Color3.fromRGB(60, 40, 120), Accent = Color3.fromRGB(255, 120, 230), Shape = "Blob", Glow = true },
-	{ Id = "AuroraWhale", Name = "Aurora Whale", Rarity = "Legendary", ProductId = 0, Bonus = { Type = "Power", Amount = 0.25 },
+	{ Id = "AuroraWhale", Name = "Aurora Whale", Rarity = "Legendary", ProductId = 3717275158, Bonus = { Type = "Power", Amount = 0.25 },
 		Body = Color3.fromRGB(40, 90, 120), Accent = Color3.fromRGB(120, 255, 220), Shape = "Wisp", Glow = true },
 } :: { Pet }
 
